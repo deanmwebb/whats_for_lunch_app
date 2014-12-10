@@ -37,9 +37,8 @@ ActiveRecord::Schema.define(version: 20141210223248) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "username"
-    t.string   "password"
     t.string   "address"
-    t.string   "preferred_cousine"
+    t.string   "preferred_cuisine"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
