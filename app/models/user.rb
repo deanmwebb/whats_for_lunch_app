@@ -4,6 +4,5 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-    validates :preferred_cuisine, presence: true
-	validates :address, presence: true
+	belongs_to :attended_restaurant
 end

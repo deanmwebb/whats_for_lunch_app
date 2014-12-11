@@ -45,3 +45,5 @@ gem 'devise'
 
 gem 'simple_form'
 
+gem 'google_places'
+
