@@ -87,7 +87,7 @@ class RestaurantsController < ApplicationController
   end
     
     def load_restaurants_from_google_api
-      #if @places.nil?
+      if @places.nil?
           logger.info "Querying Google API for Places near #{current_user.address}..."
 
             #Get Home Address
@@ -110,9 +110,9 @@ class RestaurantsController < ApplicationController
           end
 
             distance = calculate_distance_using_google_api(@home_address_gps, place)
-            logger.info "Distance between two points: #{distance}"
+            logger.info "Distance/Duration between two points: #{distance}"
           end
-      #end
+      end
      end
 
        
@@ -186,8 +186,11 @@ class RestaurantsController < ApplicationController
           res = Net::HTTP.get_response(uri)
          logger.info "Response from Google Maps API: #{res.body}"
 
-         @distance_result = JSON.parse(res.body)["rows"].first["elements"].first["distance"]["value"]
-         logger.info "Distance Result: #{@distance_result} Meters"
+         @distance_result = {
+          distance_from_user: JSON.parse(res.body)["rows"].first["elements"].first["distance"]["value"],
+          drive_time_for_user: JSON.parse(res.body)["rows"].first["elements"].first["duration"]["value"]
+        }
+         logger.info "Distance Result: #{@distance_result} Meters | Seconds"
          @distance_result
        end
 
