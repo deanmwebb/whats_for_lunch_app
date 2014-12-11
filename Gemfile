@@ -7,6 +7,11 @@ gem 'rails', '4.1.4'
 gem 'sqlite3'
 
 gem "twitter-bootstrap-rails"
+gem 'devise'
+gem 'simple_form'
+gem 'google_places'
+gem 'rails4-autocomplete'
+gem 'jquery-ui-rails'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
@@ -40,10 +45,4 @@ gem 'spring',        group: :development
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-
-gem 'devise'
-
-gem 'simple_form'
-
-gem 'google_places'
 

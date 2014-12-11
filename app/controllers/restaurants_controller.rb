@@ -41,19 +41,22 @@ class RestaurantsController < ApplicationController
 
   # POST /restaurants
   # POST /restaurants.json
-  def create(params)
+  def create(params = {})
 
     if params.length == 0
-    @restaurant = Restaurant.new(restaurant_params)
-
+      @restaurant = Restaurant.new(restaurant_params)
         respond_to do |format|
       if @restaurant.save
+        user_distance_data = calculate_distance_using_google_api({"formatted_address" => current_user.address},{"formatted_address" => @restaurant.address})
+        UserDistance.create(user_id: current_user[:id], restaurant_id: @restaurant[:id], distance_from_user: user_distance_data[:distance_from_user], drive_time_for_user: user_distance_data[:drive_time_for_user])
+
         format.html { redirect_to @restaurant, notice: 'Restaurant was successfully created.' }
         format.json { render :show, status: :created, location: @restaurant }
       else
         format.html { render :new }
         format.json { render json: @restaurant.errors, status: :unprocessable_entity }
       end
+
     end
   else
     #Preloading Database With Data from Google API

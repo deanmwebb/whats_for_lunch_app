@@ -26,7 +26,6 @@ class UserDistancesController < ApplicationController
   def create(params)
     @user_distance = UserDistance.new(user_distance_params)
 
-
      if params.length == 0
         @user_distance = UserDistance.new(user_distance_params)
 
