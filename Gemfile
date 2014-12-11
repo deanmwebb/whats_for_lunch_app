@@ -12,6 +12,7 @@ gem 'simple_form'
 gem 'google_places'
 gem 'rails4-autocomplete'
 gem 'jquery-ui-rails'
+gem 'bootstrap-datepicker-rails'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'

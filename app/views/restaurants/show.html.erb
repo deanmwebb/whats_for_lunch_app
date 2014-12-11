@@ -14,6 +14,8 @@
   <dd><%= @restaurant.cost %></dd>
   <dt><strong><%= model_class.human_attribute_name(:rating) %>:</strong></dt>
   <dd><%= @restaurant.rating %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:last_attended) %>:</strong></dt>
+  <dd><%= @restaurant.last_attended %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),

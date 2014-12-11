@@ -11,6 +11,7 @@
       <th><%= model_class.human_attribute_name(:cuisine) %></th>
       <th><%= model_class.human_attribute_name(:cost) %></th>
       <th><%= model_class.human_attribute_name(:rating) %></th>
+      <th><%= model_class.human_attribute_name(:last_attended) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -24,6 +25,7 @@
         <td><%= restaurant.cuisine %></td>
         <td><%= restaurant.cost %></td>
         <td><%= restaurant.rating %></td>
+        <td><%= restaurant.last_attended %></td>
         <td><%=l restaurant.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

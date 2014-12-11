@@ -8,19 +8,6 @@ class RestaurantsController < ApplicationController
 
   # GET /restaurants
   # GET /restaurants.json
-  @google_api_key = "AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY"
-  @log_places = lambda do |place|
-    logger.info "Place: #{place["name"].capitalize}"
-    logger.info "Address: #{place["formatted_address"]}"
-    logger.info "Rating: #{place["rating"]}"
-    logger.info "Latitude: #{place["lat"]}"
-    logger.info "Longitude: #{place["lng"]}"
-    logger.info "Types: #{place["types"]}"
-
-    3.times{logger.info ""}
-  end
-
-
   def index
     @restaurants = Restaurant.all
   end
@@ -37,6 +24,7 @@ class RestaurantsController < ApplicationController
 
   # GET /restaurants/1/edit
   def edit
+
   end
 
   # POST /restaurants
@@ -44,11 +32,14 @@ class RestaurantsController < ApplicationController
   def create(params = {})
 
     if params.length == 0
+
       @restaurant = Restaurant.new(restaurant_params)
         respond_to do |format|
       if @restaurant.save
         user_distance_data = calculate_distance_using_google_api({"formatted_address" => current_user.address},{"formatted_address" => @restaurant.address})
         UserDistance.create(user_id: current_user[:id], restaurant_id: @restaurant[:id], distance_from_user: user_distance_data[:distance_from_user], drive_time_for_user: user_distance_data[:drive_time_for_user])
+
+        AttendedRestaurant.create(user_id: current_user[:id], restaurant_id: @restaurant[:id], date_attended: @restaurant.last_attended) unless @restaurant.last_attended.nil?
 
         format.html { redirect_to @restaurant, notice: 'Restaurant was successfully created.' }
         format.json { render :show, status: :created, location: @restaurant }
@@ -73,6 +64,9 @@ class RestaurantsController < ApplicationController
   def update
     respond_to do |format|
       if @restaurant.update(restaurant_params)
+
+        AttendedRestaurant.create(user_id: current_user[:id], restaurant_id: @restaurant.id, date_attended: @restaurant.last_attended) unless @restaurant.last_attended.nil?
+
         format.html { redirect_to @restaurant, notice: 'Restaurant was successfully updated.' }
         format.json { render :show, status: :ok, location: @restaurant }
       else
@@ -210,6 +204,6 @@ class RestaurantsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def restaurant_params
-      params.require(:restaurant).permit(:id, :name, :address, :cuisine, :cost, :rating)
+      params.require(:restaurant).permit(:id, :name, :address, :cuisine, :cost, :rating, :last_attended)
     end
 end

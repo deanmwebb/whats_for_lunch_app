@@ -1,5 +1,6 @@
 class AttendedRestaurantsController < ApplicationController
   before_action :set_attended_restaurant, only: [:show, :edit, :update, :destroy]
+  autocomplete :restaurants, :name
 
   # GET /attended_restaurants
   # GET /attended_restaurants.json
@@ -23,8 +24,13 @@ class AttendedRestaurantsController < ApplicationController
 
   # POST /attended_restaurants
   # POST /attended_restaurants.json
-  def create
-    @attended_restaurant = AttendedRestaurant.new(attended_restaurant_params)
+  def create(params = {})
+
+    if params.length == 0
+      @attended_restaurant = AttendedRestaurant.new(attended_restaurant_params)
+    else
+      @attended_restaurant = AttendedRestaurant.new(params)
+    end
 
     respond_to do |format|
       if @attended_restaurant.save

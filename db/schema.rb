@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20141211132416) do
     t.string   "cuisine"
     t.integer  "cost"
     t.decimal  "rating"
+    t.datetime "last_attended"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

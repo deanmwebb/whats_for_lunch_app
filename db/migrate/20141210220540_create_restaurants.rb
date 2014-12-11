@@ -6,6 +6,7 @@ class CreateRestaurants < ActiveRecord::Migration
       t.string :cuisine
       t.integer :cost
       t.decimal :rating
+      t.timestamp :last_attended
 
       t.timestamps
     end

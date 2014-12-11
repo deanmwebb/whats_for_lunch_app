@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
   resources :user_distances
 
-  resources :attended_restaurants
-
+  resources :attended_restaurants do
+   get :autocomplete_restaurants_name, :on => :collection
+  end
   devise_for :users
   resources :restaurants
 
