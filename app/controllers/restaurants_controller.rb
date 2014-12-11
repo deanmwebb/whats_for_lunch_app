@@ -56,9 +56,12 @@ class RestaurantsController < ApplicationController
       end
     end
   else
-    #Preloading Database
+    #Preloading Database With Data from Google API
      @restaurant = Restaurant.new(name: params[:name], address: params[:address], cost: params[:cost], rating: params[:rating] , cuisine: params[:cuisine])
-     @restaurant.save  
+     @restaurant.save 
+
+     logger.info "INFO: Logging User Distance to Database... user_id: #{current_user[:id]}, restaurant_id: #{@restaurant[:id]}, distance_from_user: #{params[:distance_from_user]} Meters, drive_time_for_user: #{params[:drive_time_for_user]} Seconds"
+     UserDistance.create(user_id: current_user[:id], restaurant_id: @restaurant[:id], distance_from_user: params[:distance_from_user], drive_time_for_user: params[:drive_time_for_user])
    end
   end
 
@@ -87,7 +90,7 @@ class RestaurantsController < ApplicationController
   end
     
     def load_restaurants_from_google_api
-      if @places.nil?
+      #if @places.nil?
           logger.info "Querying Google API for Places near #{current_user.address}..."
 
             #Get Home Address
@@ -97,22 +100,25 @@ class RestaurantsController < ApplicationController
             query_nearby_places
 
           @places.each do |place|
-            restaurant_param = {
+
+            distance = calculate_distance_using_google_api(@home_address_gps, place)
+            logger.info "Distance/Duration between two points: #{distance}"
+
+            creation_params = {
               name: place["name"].capitalize,
               address: place["formatted_address"],
               rating: place["rating"].to_f,
               cuisine: place["types"].first.gsub("_"," ").split()[0].capitalize,
-              cost: place["price_level"].nil? ? 3 : place["price_level"].next
+              cost: place["price_level"].nil? ? 3 : place["price_level"].next,
+              distance_from_user: distance[:distance_from_user],
+              drive_time_for_user: distance[:drive_time_for_user]
             }
 
-            if Restaurant.where(name: restaurant_param[:name]).first.nil? && Restaurant.where(address: restaurant_param[:address]).first.nil?
-                  create(restaurant_param)
+            if Restaurant.where(name: creation_params[:name]).first.nil? && Restaurant.where(address: creation_params[:address]).first.nil?
+                  create(creation_params)
           end
-
-            distance = calculate_distance_using_google_api(@home_address_gps, place)
-            logger.info "Distance/Duration between two points: #{distance}"
-          end
-      end
+        end
+      #end
      end
 
        
@@ -201,6 +207,6 @@ class RestaurantsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def restaurant_params
-      params.require(:restaurant).permit(:name, :address, :cuisine, :cost, :rating)
+      params.require(:restaurant).permit(:id, :name, :address, :cuisine, :cost, :rating)
     end
 end

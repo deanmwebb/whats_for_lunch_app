@@ -23,18 +23,27 @@ class UserDistancesController < ApplicationController
 
   # POST /user_distances
   # POST /user_distances.json
-  def create
+  def create(params)
     @user_distance = UserDistance.new(user_distance_params)
 
-    respond_to do |format|
-      if @user_distance.save
-        format.html { redirect_to @user_distance, notice: 'User distance was successfully created.' }
-        format.json { render :show, status: :created, location: @user_distance }
-      else
-        format.html { render :new }
-        format.json { render json: @user_distance.errors, status: :unprocessable_entity }
+
+     if params.length == 0
+        @user_distance = UserDistance.new(user_distance_params)
+
+      respond_to do |format|
+        if @user_distance.save
+          format.html { redirect_to @user_distance, notice: 'User distance was successfully created.' }
+          format.json { render :show, status: :created, location: @user_distance }
+        else
+          format.html { render :new }
+          format.json { render json: @user_distance.errors, status: :unprocessable_entity }
+        end
       end
-    end
+  else
+    #Preloading Database With Data from Google API
+     @user_distance = UserDistance.new(user_id: params[:user_id], restaurant_id: params[:restaurant_id], distance_from_user: params[:distance_from_user], drive_time_for_user: params[:drive_time_for_user])
+     @user_distance.save 
+   end
   end
 
   # PATCH/PUT /user_distances/1

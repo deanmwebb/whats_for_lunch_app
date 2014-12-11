@@ -11,13 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141211095606) do
+ActiveRecord::Schema.define(version: 20141211104850) do
 
   create_table "attended_restaurants", force: true do |t|
     t.integer  "restaurant_id"
     t.integer  "user_id"
-    t.integer  "distance_from_user"
-    t.integer  "drive_time_for_user"
     t.datetime "date_attended"
     t.datetime "created_at"
     t.datetime "updated_at"
