@@ -1,0 +1,31 @@
+<h1>Listing user_distances</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Restaurant</th>
+      <th>Distance from user</th>
+      <th>Drive time for user</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @user_distances.each do |user_distance| %>
+      <tr>
+        <td><%= user_distance.user_id %></td>
+        <td><%= user_distance.restaurant_id %></td>
+        <td><%= user_distance.distance_from_user %></td>
+        <td><%= user_distance.drive_time_for_user %></td>
+        <td><%= link_to 'Show', user_distance %></td>
+        <td><%= link_to 'Edit', edit_user_distance_path(user_distance) %></td>
+        <td><%= link_to 'Destroy', user_distance, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New User distance', new_user_distance_path %>

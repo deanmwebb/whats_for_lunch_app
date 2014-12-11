@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @user_distance.user_id %>
+</p>
+
+<p>
+  <strong>Restaurant:</strong>
+  <%= @user_distance.restaurant_id %>
+</p>
+
+<p>
+  <strong>Distance from user:</strong>
+  <%= @user_distance.distance_from_user %>
+</p>
+
+<p>
+  <strong>Drive time for user:</strong>
+  <%= @user_distance.drive_time_for_user %>
+</p>
+
+<%= link_to 'Edit', edit_user_distance_path(@user_distance) %> |
+<%= link_to 'Back', user_distances_path %>

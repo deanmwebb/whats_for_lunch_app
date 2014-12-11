@@ -5,4 +5,5 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
 	belongs_to :attended_restaurant
+	belongs_to :user_distance
 end

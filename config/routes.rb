@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :user_distances
+
   resources :attended_restaurants
 
   devise_for :users

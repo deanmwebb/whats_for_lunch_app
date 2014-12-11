@@ -10,4 +10,5 @@ class Restaurant < ActiveRecord::Base
 					   length: { minimum: 1, maximum: 5 }
 
 	belongs_to :attended_restaurant
+	belongs_to :user_distance
 end

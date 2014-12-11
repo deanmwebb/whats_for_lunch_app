@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 1
+  restaurant_id: 1
+  distance_from_user: 1
+  drive_time_for_user: 1
+
+two:
+  user_id: 1
+  restaurant_id: 1
+  distance_from_user: 1
+  drive_time_for_user: 1
