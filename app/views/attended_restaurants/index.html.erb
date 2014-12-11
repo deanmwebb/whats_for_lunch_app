@@ -1,0 +1,29 @@
+<h1>Listing attended_restaurants</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Restaurant</th>
+      <th>User</th>
+      <th>Date attended</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @attended_restaurants.each do |attended_restaurant| %>
+      <tr>
+        <td><%= attended_restaurant.restaurant_id %></td>
+        <td><%= attended_restaurant.user_id %></td>
+        <td><%= attended_restaurant.date_attended %></td>
+        <td><%= link_to 'Show', attended_restaurant %></td>
+        <td><%= link_to 'Edit', edit_attended_restaurant_path(attended_restaurant) %></td>
+        <td><%= link_to 'Destroy', attended_restaurant, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Attended restaurant', new_attended_restaurant_path %>

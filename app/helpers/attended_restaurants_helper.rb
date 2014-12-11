@@ -1,0 +1,2 @@
+module AttendedRestaurantsHelper
+end
