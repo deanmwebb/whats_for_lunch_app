@@ -3,21 +3,19 @@ require 'net/http'
 
 class RestaurantsController < ApplicationController
 
-  before_action :create_google_api_client, only: [:index, :show]
   before_action :set_restaurant, only: [:show, :edit, :update, :destroy]
-  before_action :load_restaurants_from_google_api
+  before_action :load_restaurants_from_google_api, only: [:index]
 
   # GET /restaurants
   # GET /restaurants.json
-  #@google_api_key = "AIzaSyDNMJwNQiqU1-0KHZXz6omHpzCaqY5gKCs"
   @google_api_key = "AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY"
   @log_places = lambda do |place|
-    logger.info "Place: #{place.name.capitalize}"
-    logger.info "Address: #{place.formatted_address}"
-    logger.info "Rating: #{place.rating}"
-    logger.info "Latitude: #{place.lat}"
-    logger.info "Longitude: #{place.lng}"
-    logger.info "Types: #{place.types}"
+    logger.info "Place: #{place["name"].capitalize}"
+    logger.info "Address: #{place["formatted_address"]}"
+    logger.info "Rating: #{place["rating"]}"
+    logger.info "Latitude: #{place["lat"]}"
+    logger.info "Longitude: #{place["lng"]}"
+    logger.info "Types: #{place["types"]}"
 
     3.times{logger.info ""}
   end
@@ -43,10 +41,12 @@ class RestaurantsController < ApplicationController
 
   # POST /restaurants
   # POST /restaurants.json
-  def create
+  def create(params)
+
+    if params.length == 0
     @restaurant = Restaurant.new(restaurant_params)
 
-    respond_to do |format|
+        respond_to do |format|
       if @restaurant.save
         format.html { redirect_to @restaurant, notice: 'Restaurant was successfully created.' }
         format.json { render :show, status: :created, location: @restaurant }
@@ -55,6 +55,11 @@ class RestaurantsController < ApplicationController
         format.json { render json: @restaurant.errors, status: :unprocessable_entity }
       end
     end
+  else
+    #Preloading Database
+     @restaurant = Restaurant.new(name: params[:name], address: params[:address], cost: params[:cost], rating: params[:rating] , cuisine: params[:cuisine])
+     @restaurant.save  
+   end
   end
 
   # PATCH/PUT /restaurants/1
@@ -82,63 +87,109 @@ class RestaurantsController < ApplicationController
   end
     
     def load_restaurants_from_google_api
-      logger.info "Querying Google API for Places near #{current_user.address}..."
+      #if @places.nil?
+          logger.info "Querying Google API for Places near #{current_user.address}..."
 
-      @home_address_gps = @client.spots_by_query("270 17th St NW, Atlanta GA, 30324").first unless current_user.address.empty?
-      @places = @client.spots_by_query("Places near #{current_user.address}", :types => ['restaurant', 'food'], :exclude => ['lodging', 'grocery_or_supermarket'], :radius => 16093) # 10 mile radius
+            #Get Home Address
+            query_home_address
 
-      @places.each do |place|
-        @log_places.call(place)
-        distance = calculate_distance_using_google_api(@home_address_gps, place)
-        logger.info "Distance between two points: distance"
-      end
+            #Get Nearby Places
+            query_nearby_places
+
+          @places.each do |place|
+            restaurant_param = {
+              name: place["name"].capitalize,
+              address: place["formatted_address"],
+              rating: place["rating"].to_f,
+              cuisine: place["types"].first.gsub("_"," ").split()[0].capitalize,
+              cost: place["price_level"].nil? ? 3 : place["price_level"].next
+            }
+
+            if Restaurant.where(name: restaurant_param[:name]).first.nil? && Restaurant.where(address: restaurant_param[:address]).first.nil?
+                  create(restaurant_param)
+          end
+
+            distance = calculate_distance_using_google_api(@home_address_gps, place)
+            logger.info "Distance between two points: #{distance}"
+          end
+      #end
      end
 
-     def calculate_distance_using_google_api(origin_address_gps, destination_address_gps)
-
-      #Can't use Maps API, asked me to pay
-      # logger.info "Using Google Maps API to Calculate Distance between #{origin_address_gps.formatted_address} and #{destination_address_gps.formatted_address}"
-
-      # url = URI.parse("https://maps.googleapis.com/maps/api/distancematrix/json?"\
-      #                 "origins=#{origin_address_gps.lat},#{origin_address_gps.lng}"\
-      #                 "&destinations=#{destination_address_gps.lat},#{destination_address_gps.lng}"\
-      #                 "&key=#{@google_api_key}"\
-      #                 "&mode=driving"\
-      #                 "&departure_time=now")
-      # req = Net::HTTP::Get.new(url.to_s)
-      # res = Net::HTTP.start(url.host, url.port) do |http|
-      #   http.request(req)
-      # end
-
-      # logger.info "#{res.body}"
-
-
-      #Calculating Distance using Haversine Formula
-      distance [origin_address_gps.lat, origin_address_gps.lng],[destination_address_gps.lat, destination_address_gps.lng]
-     end
+       
 
     private
 
-    def create_google_api_client
-      @client = GooglePlaces::Client.new(@google_api_key)
-    end
+    def query_home_address
+        uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
+        params = { 
+          :key => "AIzaSyAw-ItKGrTc6KTfnXwNa2s9KixqrKHVl1c", 
+          :query => current_user.address 
+        }
+        uri.query = URI.encode_www_form(params)
 
-    def distance a, b
-      rad_per_deg = Math::PI/180  # PI / 180
-      rkm = 6371                  # Earth radius in kilometers
-      rm = rkm * 1000             # Radius in meters
+        res = Net::HTTP.get_response(uri)
 
-      dlon_rad = (b[1]-a[1]) * rad_per_deg  # Delta, converted to rad
-      dlat_rad = (b[0]-a[0]) * rad_per_deg
+       logger.info "Response from Querying Home: #{res.body}"
 
-      lat1_rad, lon1_rad = a.map! {|i| i * rad_per_deg }
-      lat2_rad, lon2_rad = b.map! {|i| i * rad_per_deg }
+       @home_address_gps = JSON.parse(res.body)["results"].first
+     end
 
-      a = Math.sin(dlat_rad/2)**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin(dlon_rad/2)**2
-      c = 2 * Math::atan2(Math::sqrt(a), Math::sqrt(1-a))
+     def query_nearby_places
+            uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
+            params = { 
+              key: "AIzaSyBZzPpygsuj-so-IUWVI87GTrWRQD2TDvU", 
+              query: "Places near #{current_user.address}",
+              types: "restaurant|food",
+              radius: 16093
+            }
+          uri.query = URI.encode_www_form(params)
 
-      rm * c # Delta in meters
-    end
+          res = Net::HTTP.get_response(uri)
+         logger.info "Response from Querying Places: #{res.body}"
+
+         @places = JSON.parse(res.body)["results"]
+        end
+
+        def retry_collecting_places(next_token)
+            uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
+            params = { 
+            pagetoken: next_token,
+            key: "AIzaSyBZzPpygsuj-so-IUWVI87GTrWRQD2TDvU"
+          }
+          uri.query = URI.encode_www_form(params)
+          res = Net::HTTP.get_response(uri)
+
+          logger.info "Response from EXTENDED QUERY: #{JSON.parse(res.body)}"
+          temp = JSON.parse(res.body)["results"]
+          logger.info "Temp class: #{temp.class} Temp Size: #{temp.size}"
+
+          temp.each do |extended_result|
+            @places.push(extended_result)
+          end
+
+        next_token = JSON.parse(res.body)["next_page_token"]
+        end
+
+     def calculate_distance_using_google_api(origin_address_gps, destination_address_gps)
+       logger.info "Using Google Maps API to Calculate Distance between #{origin_address_gps["formatted_address"]} and #{destination_address_gps["formatted_address"]}"
+       uri = URI('https://maps.googleapis.com/maps/api/distancematrix/json')
+
+       params = { 
+            origins: "#{origin_address_gps["formatted_address"]}",
+            destinations: "#{destination_address_gps["formatted_address"]}",  
+            key: "AIzaSyBZzPpygsuj-so-IUWVI87GTrWRQD2TDvU",
+            mode: "driving"
+          }
+
+          uri.query = URI.encode_www_form(params)
+
+          res = Net::HTTP.get_response(uri)
+         logger.info "Response from Google Maps API: #{res.body}"
+
+         @distance_result = JSON.parse(res.body)["rows"].first["elements"].first["distance"]["value"]
+         logger.info "Distance Result: #{@distance_result} Meters"
+         @distance_result
+       end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_restaurant

@@ -16,6 +16,8 @@ ActiveRecord::Schema.define(version: 20141211013110) do
   create_table "attended_restaurants", force: true do |t|
     t.integer  "restaurant_id"
     t.integer  "user_id"
+    t.integer  "distance_from_user"
+    t.integer  "drive_time_for_user"
     t.datetime "date_attended"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -26,7 +28,7 @@ ActiveRecord::Schema.define(version: 20141211013110) do
     t.string   "address"
     t.string   "cuisine"
     t.integer  "cost"
-    t.integer  "rating"
+    t.decimal  "rating"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

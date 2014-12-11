@@ -5,7 +5,7 @@ class CreateRestaurants < ActiveRecord::Migration
       t.string :address
       t.string :cuisine
       t.integer :cost
-      t.integer :rating
+      t.decimal :rating
 
       t.timestamps
     end
