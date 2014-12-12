@@ -9,6 +9,7 @@ gem 'sqlite3', :group => [:development, :test]
 group :production do
   gem 'thin'
   gem 'pg'
+  gem 'rails_12factor'
 end
 
 gem "twitter-bootstrap-rails"
