@@ -7,7 +7,7 @@ module RestaurantsHelper
        uri = URI('https://maps.googleapis.com/maps/api/distancematrix/json')
 
         if Rails.env.production?
-          key = "AIzaSyB1kXe95OypwrCIbgghllczvQoFFUN57iU"
+          key = "AIzaSyDNMJwNQiqU1-0KHZXz6omHpzCaqY5gKCs"
         else
           key = "AIzaSyDNMJwNQiqU1-0KHZXz6omHpzCaqY5gKCs"
         end
@@ -37,7 +37,7 @@ module RestaurantsHelper
 
       def self.query_nearby_places(current_user_address)
         if Rails.env.production?
-          key = "AIzaSyCkn6j8eTlb5uS-EOY0iIwFYAXpUq-qVJw"
+          key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY","AIzaSyAw-ItKGrTc6KTfnXwNa2s9KixqrKHVl1c"].sample
         else
           key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY","AIzaSyAw-ItKGrTc6KTfnXwNa2s9KixqrKHVl1c"].sample
         end

@@ -118,7 +118,6 @@ class RestaurantsController < ApplicationController
     end
   end
 
-
   private
 
   def retry_collecting_places(next_token)
