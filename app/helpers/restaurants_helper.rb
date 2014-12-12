@@ -36,7 +36,6 @@ module RestaurantsHelper
        end
 
       def self.query_nearby_places(current_user_address)
-
         if Rails.env.production?
           key = "AIzaSyCkn6j8eTlb5uS-EOY0iIwFYAXpUq-qVJw"
         else
