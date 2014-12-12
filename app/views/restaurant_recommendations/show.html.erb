@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Restaurant:</strong>
+  <%= @restaurant_recommendation.restaurant_id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @restaurant_recommendation.user_id %>
+</p>
+
+<p>
+  <strong>Overall rating:</strong>
+  <%= @restaurant_recommendation.overall_rating %>
+</p>
+
+<p>
+  <strong>Budget rating:</strong>
+  <%= @restaurant_recommendation.budget_rating %>
+</p>
+
+<p>
+  <strong>Distance rating:</strong>
+  <%= @restaurant_recommendation.distance_rating %>
+</p>
+
+<p>
+  <strong>Uniqueness rating:</strong>
+  <%= @restaurant_recommendation.uniqueness_rating %>
+</p>
+
+<%= link_to 'Edit', edit_restaurant_recommendation_path(@restaurant_recommendation) %> |
+<%= link_to 'Back', restaurant_recommendations_path %>
