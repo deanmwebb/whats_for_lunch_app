@@ -9,6 +9,7 @@
       <th><%= model_class.human_attribute_name(:restaurant_id) %></th>
       <th><%= "Address" %></th>
       <th><%= "Distance" %></th>
+      <th><%= "Last Attended" %></th>
       <th><%= model_class.human_attribute_name(:overall_rating) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -20,6 +21,7 @@
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
         <td><%= "#{(UserDistance.find(restaurant_recommendation.restaurant_id).distance_from_user/1609.0).round(2)} mi" %></td>
+        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
         <td><%= restaurant_recommendation.overall_rating.round(2) %></td>
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
@@ -45,6 +47,7 @@
       <th><%= model_class.human_attribute_name(:restaurant_id) %></th>
       <th><%= "Address" %></th>
       <th><%= "Distance" %></th>
+      <th><%= "Last Attended" %></th>
       <th><%= model_class.human_attribute_name(:budget_rating) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -56,6 +59,7 @@
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
         <td><%= "#{(UserDistance.find(restaurant_recommendation.restaurant_id).distance_from_user/1609.0).round(2)} mi" %></td>
+        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
         <td><%= restaurant_recommendation.budget_rating %></td>
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
@@ -81,6 +85,7 @@
       <th><%= model_class.human_attribute_name(:restaurant_id) %></th>
       <th><%= "Address" %></th>
       <th><%= "Distance" %></th>
+      <th><%= "Last Attended" %></th>
       <th><%= model_class.human_attribute_name(:distance_rating) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -92,6 +97,7 @@
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
         <td><%= "#{(UserDistance.find(restaurant_recommendation.restaurant_id).distance_from_user/1609.0).round(2)} mi" %></td>
+        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
         <td><%= restaurant_recommendation.distance_rating %></td>
         <td>
         <%= link_to t('.show', :default => t("helpers.links.show")),
@@ -118,6 +124,7 @@
       <th><%= model_class.human_attribute_name(:restaurant_id) %></th>
       <th><%= "Address" %></th>
       <th><%= "Distance" %></th>
+      <th><%= "Last Attended" %></th>
       <th><%= model_class.human_attribute_name(:uniqueness_rating) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -129,6 +136,7 @@
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
         <td><%= "#{(UserDistance.find(restaurant_recommendation.restaurant_id).distance_from_user/1609.0).round(2)} mi" %></td>
+        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
         <td><%= restaurant_recommendation.uniqueness_rating %></td>
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
