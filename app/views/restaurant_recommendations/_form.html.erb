@@ -1,16 +1,18 @@
-<%= simple_form_for(@restaurant_recommendation) do |f| %>
-  <%= f.error_notification %>
+<%= simple_form_for @restaurant_recommendation, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :restaurant_id %>
+  <%= error_span(@restaurant_recommendation[:restaurant_id]) %>
+  <%= f.input :user_id %>
+  <%= error_span(@restaurant_recommendation[:user_id]) %>
+  <%= f.input :overall_rating %>
+  <%= error_span(@restaurant_recommendation[:overall_rating]) %>
+  <%= f.input :budget_rating %>
+  <%= error_span(@restaurant_recommendation[:budget_rating]) %>
+  <%= f.input :distance_rating %>
+  <%= error_span(@restaurant_recommendation[:distance_rating]) %>
+  <%= f.input :uniqueness_rating %>
+  <%= error_span(@restaurant_recommendation[:uniqueness_rating]) %>
 
-  <div class="form-inputs">
-    <%= f.input :restaurant_id %>
-    <%= f.input :user_id %>
-    <%= f.input :overall_rating %>
-    <%= f.input :budget_rating %>
-    <%= f.input :distance_rating %>
-    <%= f.input :uniqueness_rating %>
-  </div>
-
-  <div class="form-actions">
-    <%= f.button :submit %>
-  </div>
+  <%= f.button :submit, :class => 'btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                restaurant_recommendations_path, :class => 'btn btn-default' %>
 <% end %>

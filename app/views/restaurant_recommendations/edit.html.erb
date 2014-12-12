@@ -1,6 +1,5 @@
-<h1>Editing restaurant_recommendation</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Show', @restaurant_recommendation %> |
-<%= link_to 'Back', restaurant_recommendations_path %>
+<%- model_class = RestaurantRecommendation -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h1>
+</div>
+<%= render :partial => 'form' %>
