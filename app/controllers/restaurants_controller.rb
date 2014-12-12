@@ -89,6 +89,12 @@ class RestaurantsController < ApplicationController
     def load_restaurants_from_google_api
           logger.info "Querying Google API for Places near #{current_user.address}..."
 
+          if Rails.env.production?
+            key = 
+          else
+            key = 
+          end
+
           #Get Nearby Places
           @places = RestaurantsHelper.query_nearby_places(current_user.address)
 
