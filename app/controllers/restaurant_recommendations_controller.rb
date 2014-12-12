@@ -2,14 +2,14 @@ class RestaurantRecommendationsController < ApplicationController
 
   before_action :set_restaurant_recommendation, only: [:show, :edit, :update, :destroy]
   
-    helper_method :load_api_data_path 
-    helper_method :load_distances_path 
-    before_action :load_data
+    helper_method :load_api_data_path
+    helper_method :load_distances_path
+    before_filter :load_data, only: [:show, :index]
 
   # GET /restaurant_recommendations
   # GET /restaurant_recommendations.json
   def index
-    @restaurant_recommendations = RestaurantRecommendation.all
+    @restaurant_recommendations = RestaurantRecommendation.all.where(user_id: current_user.id)
   end
 
   # GET /restaurant_recommendations/1
@@ -63,7 +63,7 @@ class RestaurantRecommendationsController < ApplicationController
       end
     else
       logger.info "PARAMS PASSED INTO UPDATE ACTION FOR RESTAURANT_RECOMMENDATIONS #{params}"
-      RestaurantRecommendation.where(user_id: params[:user_id], restaurant_id: params[:restaurant_id]).first.update({ user_id: params[:user_id], restaurant_id: params[:restaurant_id], overall_rating: params[:overall_rating], budget_rating: params[:budget_rating], distance_rating: params[:distance_rating], uniqueness_rating: params[:uniqueness_rating]})
+      RestaurantRecommendation.where(user_id: params[:user_id], restaurant_id: params[:restaurant_id]).first.update({overall_rating: params[:overall_rating], budget_rating: params[:budget_rating], distance_rating: params[:distance_rating], uniqueness_rating: params[:uniqueness_rating]})
     end
   end
 
@@ -205,6 +205,7 @@ class RestaurantRecommendationsController < ApplicationController
 
     def get_distance_in_miles(restaurant)
       distance_meters = @loaded_user_distances.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.nil? ? 15 : @loaded_user_distances.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.distance_from_user
+      logger.info "DISTANCE IN MILES FROM USER #{current_user.username} TO RESTAURANT #{restaurant.address} IS  #{distance_meters/1609.0}"
       distance_miles = (distance_meters/1609.0)
     end
 
