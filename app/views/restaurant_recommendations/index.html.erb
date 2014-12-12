@@ -55,14 +55,14 @@
     </tr>
   </thead>
   <tbody>
-    <% @restaurant_recommendations.order(:budget_rating).reverse.take(10).each do |restaurant_recommendation| %>
+    <% @restaurant_recommendations.order(:budget_rating).reverse.take(1).each do |restaurant_recommendation| %>
       <tr>
         <td><%= link_to restaurant_recommendation.id, restaurant_recommendation_path(restaurant_recommendation) %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
         <td><%= "#{(UserDistance.find(restaurant_recommendation.restaurant_id).distance_from_user/1609.0).round(2)} mi" %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
-        <td><%= restaurant_recommendation.budget_rating %></td>
+        <td><%= restaurant_recommendation.budget_rating.round(2) %></td>
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
                       restaurant_recommendation_path(restaurant_recommendation), :class => 'btn btn-default btn-xs' %>
@@ -94,14 +94,14 @@
     </tr>
   </thead>
   <tbody>
-    <% @restaurant_recommendations.order(:distance_rating).reverse.take(10).each do |restaurant_recommendation| %>
+    <% @restaurant_recommendations.order(:distance_rating).reverse.take(1).each do |restaurant_recommendation| %>
       <tr>
         <td><%= link_to restaurant_recommendation.id, restaurant_recommendation_path(restaurant_recommendation) %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
         <td><%= "#{(UserDistance.find(restaurant_recommendation.restaurant_id).distance_from_user/1609.0).round(2)} mi" %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
-        <td><%= restaurant_recommendation.distance_rating %></td>
+        <td><%= restaurant_recommendation.distance_rating.round(2) %></td>
         <td>
         <%= link_to t('.show', :default => t("helpers.links.show")),
                       restaurant_recommendation_path(restaurant_recommendation), :class => 'btn btn-default btn-xs' %>
@@ -134,7 +134,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @restaurant_recommendations.order(:uniqueness_rating).reverse.take(10).each do |restaurant_recommendation| %>
+    <% @restaurant_recommendations.order(:uniqueness_rating).reverse.take(1).each do |restaurant_recommendation| %>
       <tr>
         <td><%= link_to restaurant_recommendation.id, restaurant_recommendation_path(restaurant_recommendation) %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>

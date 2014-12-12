@@ -92,8 +92,8 @@ class RestaurantRecommendationsController < ApplicationController
       @loaded_restaurants.each { |restaurant|
 
         overall_rating = calculate_overall_ranking(restaurant)
-        budget_rating = 0.0
-        distance_rating = 0.0
+        budget_rating = calculate_budget_ranking(restaurant)
+        distance_rating = calculate_distance_ranking(restaurant)
         uniqueness_rating = 0.0
 
 
@@ -121,28 +121,112 @@ class RestaurantRecommendationsController < ApplicationController
         times_attended: 0.10,
         preferred_cuisine: 0.10
       }
+      
+      ratings_index = calculate_ratings_index(restaurant, weights)
+      cost_index = calculate_cost_index(restaurant, weights)
+      distance_index = calculate_distance_index(restaurant, weights)
+      preferred_cuisine_index = calculate_preferred_cuisine_index(restaurant, weights)
+      uniqueness_index = calculate_uniqueness_index(restaurant, weights)
 
-      distance = @loaded_user_distances.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.nil? ? 15 : UserDistance.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.distance_from_user
+      array = [ratings_index, cost_index, distance_index, uniqueness_index, preferred_cuisine_index]
+      array.map{|x| x.to_f}.reduce(:+)
+    end
 
-      ratings_index = 2*restaurant.rating*weights[:ratings]
-      cost_index = 2*(5-restaurant.cost)*weights[:cost]
+    def calculate_budget_ranking(restaurant)
+      weights = {
+        cost: 0.50,
+        distance: 0.15,
+        ratings: 0.30,
+        times_attended: 0.025,
+        preferred_cuisine: 0.025
+      }
+      budget_index = 0
+      if(restaurant.cost <= 2)
+        ratings_index = calculate_ratings_index(restaurant, weights)
+        cost_index = calculate_cost_index(restaurant, weights)
+        distance_index = calculate_distance_index(restaurant, weights)
+        preferred_cuisine_index = calculate_preferred_cuisine_index(restaurant, weights)
+        uniqueness_index = calculate_uniqueness_index(restaurant, weights)
 
+        array = [ratings_index, cost_index, distance_index, uniqueness_index, preferred_cuisine_index]
+        budget_index = array.map{|x| x.to_f}.reduce(:+)
+      end
+    end
+
+    def calculate_distance_ranking(restaurant)
+      weights = {
+        cost: 0.15,
+        distance: 0.50,
+        ratings: 0.30,
+        times_attended: 0.015,
+        preferred_cuisine: 0.035
+      }
+      distance_ranking = 0
+      if(get_distance_in_miles(restaurant) <= 1.5)
+        ratings_index = calculate_ratings_index(restaurant, weights)
+        cost_index = calculate_cost_index(restaurant, weights)
+        distance_index = calculate_distance_index(restaurant, weights)
+        preferred_cuisine_index = calculate_preferred_cuisine_index(restaurant, weights)
+        uniqueness_index = calculate_uniqueness_index(restaurant, weights)
+
+        array = [ratings_index, cost_index, distance_index, uniqueness_index, preferred_cuisine_index]
+        distance_ranking = array.map{|x| x.to_f}.reduce(:+)
+      end
+    end
+
+    def calculate_uniqueness_ranking(restaurant)
+      weights = {
+        cost: 0.20,
+        distance: 0.10,
+        ratings: 0.20,
+        times_attended: 0.40,
+        preferred_cuisine: 0.10
+      }
+      
+      uniqueness_ranking = 0
+      if(@loaded_attended_restaurants.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).count <= 2)
+        ratings_index = calculate_ratings_index(restaurant, weights)
+        cost_index = calculate_cost_index(restaurant, weights)
+        distance_index = calculate_distance_index(restaurant, weights)
+        preferred_cuisine_index = calculate_preferred_cuisine_index(restaurant, weights)
+        uniqueness_index = calculate_uniqueness_index(restaurant, weights)
+
+        array = [ratings_index, cost_index, distance_index, uniqueness_index, preferred_cuisine_index]
+        uniqueness_ranking = array.map{|x| x.to_f}.reduce(:+)
+      end
+    end
+
+    def calculate_distance_index(restaurant, weights)
       distance_index = 0
-      distance_index = ((10.0 - (distance/1609.0)))*weights[:cost] unless ((10.0 - (distance/1609.0)) < 0)
+      distance_miles = get_distance_in_miles(restaurant)
+      distance_index = (10.0 - distance_miles)*weights[:distance] unless ((10.0 - distance_miles) < 0)    
+    end
 
+    def get_distance_in_miles(restaurant)
+      distance_meters = @loaded_user_distances.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.nil? ? 15 : @loaded_user_distances.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.distance_from_user
+      distance_miles = (distance_meters/1609.0)
+    end
+
+    def calculate_cost_index(restaurant, weights)
+      2*(5-restaurant.cost)*weights[:cost]
+    end
+
+    def calculate_ratings_index(restaurant, weights)
+      2*restaurant.rating*weights[:ratings]
+    end
+
+    def calculate_uniqueness_index(restaurant, weights)
+      uniqueness_index = 0
+      total_times_attended = @loaded_attended_restaurants.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).count
+      uniqueness_index = (10 - total_times_attended)*weights[:times_attended] unless ((10.0 - total_times_attended) < 0)
+    end
+
+    def calculate_preferred_cuisine_index(restaurant, weights)
       if current_user.preferred_cuisine.downcase == restaurant.cuisine.downcase
         preferred_cuisine_index = 10*weights[:preferred_cuisine]
       else
         preferred_cuisine_index = 0*weights[:preferred_cuisine]
       end
-
-      uniqueness_index = 0
-      total_times_attended = @loaded_attended_restaurants.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).size
-      uniqueness_index = (10 - total_times_attended)*weights[:times_attended] unless ((10.0 - total_times_attended) < 0)
-
-      array = [ratings_index, cost_index, distance_index, uniqueness_index, preferred_cuisine_index]
-
-      array.map{|x| x.to_f}.reduce(:+)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
