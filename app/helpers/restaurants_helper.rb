@@ -1,4 +1,4 @@
-require 'logger'
+require 'rails'
 
 module RestaurantsHelper
 
@@ -29,18 +29,18 @@ module RestaurantsHelper
          @distance_result
        end
 
-      def self.query_nearby_places
+      def self.query_nearby_places(current_user_address)
         uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
           params = { 
               key: ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY","AIzaSyAw-ItKGrTc6KTfnXwNa2s9KixqrKHVl1c"].sample, 
-              query: "Places near #{current_user.address}",
+              query: "Places near #{current_user_address}",
               types: "restaurant|food",
               radius: 16093 #10 mile radius
             }
           uri.query = URI.encode_www_form(params)
 
           res = Net::HTTP.get_response(uri)
-          logger.info "Response from Querying Places: #{res.body}"
+          Rails.logger.info "Response from Querying Places: #{res.body}"
 
           JSON.parse(res.body)["results"]
         end

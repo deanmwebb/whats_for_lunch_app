@@ -90,7 +90,7 @@ class RestaurantsController < ApplicationController
           logger.info "Querying Google API for Places near #{current_user.address}..."
 
           #Get Nearby Places
-          @places = RestaurantsHelper.query_nearby_places
+          @places = RestaurantsHelper.query_nearby_places(current_user.address)
 
           @places.each do |place|
 

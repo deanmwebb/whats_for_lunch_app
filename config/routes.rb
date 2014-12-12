@@ -2,18 +2,20 @@ Rails.application.routes.draw do
   resources :restaurant_recommendations
 
   resources :user_distances
+  get '/load_user_distances' => 'user_distances#load_existing_restaurants', as: :load_distances_path
 
   resources :attended_restaurants do
    get :autocomplete_restaurants_name, :on => :collection
   end
   devise_for :users
   resources :restaurants
+  get '/load_from_google_api' => 'restaurants#load_restaurants_from_google_api', as: :load_api_data_path
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-   root to: 'restaurants#index'
+   root to: 'restaurant_recommendations#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

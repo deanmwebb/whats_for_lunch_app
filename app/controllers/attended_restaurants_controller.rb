@@ -29,6 +29,7 @@ class AttendedRestaurantsController < ApplicationController
     if params.length == 0
       @attended_restaurant = AttendedRestaurant.new(attended_restaurant_params)
     else
+      
       @attended_restaurant = AttendedRestaurant.new(params)
     end
 
