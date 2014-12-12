@@ -1,6 +1,7 @@
 <%- model_class = RestaurantRecommendation -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => "Overall Recommendation" %></h1>
+  <h1><%=t '.title', :default => "What's For Lunch?" %></h1>
+  <h3><%=t '.title', :default => "Top Restaurant Recommendations" %></h3>
 </div>
 <table class="table table-striped">
   <thead>
@@ -10,12 +11,12 @@
       <th><%= "Address" %></th>
       <th><%= "Distance" %></th>
       <th><%= "Last Attended" %></th>
-      <th><%= model_class.human_attribute_name(:overall_rating) %></th>
+      <th><%= "Recommendation Index" %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
-    <% @restaurant_recommendations.order(:overall_rating).reverse.take(10).each do |restaurant_recommendation| %>
+    <% @restaurant_recommendations.order(:overall_rating).reverse.take(3).each do |restaurant_recommendation| %>
       <tr>
         <td><%= link_to restaurant_recommendation.id, restaurant_recommendation_path(restaurant_recommendation) %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
@@ -38,7 +39,8 @@
 </table>
 
 <div class="page-header">
-  <h1><%=t '.title', :default => "Budget Restaurant Recommendation" %></h1>
+  <h1><%=t '.title', :default => "Broke From Christmas Shopping?" %></h1>
+  <h3><%=t '.title', :default => "Budget Restaurant Recommendation" %></h3>
 </div>
 <table class="table table-striped">
   <thead>
@@ -48,7 +50,7 @@
       <th><%= "Address" %></th>
       <th><%= "Distance" %></th>
       <th><%= "Last Attended" %></th>
-      <th><%= model_class.human_attribute_name(:budget_rating) %></th>
+      <th><%= "Budget Recommendation Index" %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -76,7 +78,8 @@
 </table>
 
 <div class="page-header">
-  <h1><%=t '.title', :default => "Distance Restaurant Recommendation" %></h1>
+  <h1><%=t '.title', :default => "Don't Feel Like Driving?" %></h1>
+  <h3><%=t '.title', :default => "Top Distance Recommendation" %></h3>
 </div>
 <table class="table table-striped">
   <thead>
@@ -86,7 +89,7 @@
       <th><%= "Address" %></th>
       <th><%= "Distance" %></th>
       <th><%= "Last Attended" %></th>
-      <th><%= model_class.human_attribute_name(:distance_rating) %></th>
+      <th><%= "Distance Recommendation Index" %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -115,7 +118,8 @@
 
 
 <div class="page-header">
-  <h1><%=t '.title', :default => "Uniqueness Restaurant Recommendation" %></h1>
+  <h1><%=t '.title', :default => "Looking for Something new?" %></h1>
+  <h3><%=t '.title', :default => "Uniqueness Recommendation" %></h3>
 </div>
 <table class="table table-striped">
   <thead>
@@ -125,7 +129,7 @@
       <th><%= "Address" %></th>
       <th><%= "Distance" %></th>
       <th><%= "Last Attended" %></th>
-      <th><%= model_class.human_attribute_name(:uniqueness_rating) %></th>
+      <th><%= "Uniqueness Recommendation Index" %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>

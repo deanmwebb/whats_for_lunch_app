@@ -62,6 +62,7 @@ class RestaurantRecommendationsController < ApplicationController
         end
       end
     else
+      logger.info "PARAMS PASSED INTO UPDATE ACTION FOR RESTAURANT_RECOMMENDATIONS #{params}"
       RestaurantRecommendation.where(user_id: params[:user_id], restaurant_id: params[:restaurant_id]).first.update({ user_id: params[:user_id], restaurant_id: params[:restaurant_id], overall_rating: params[:overall_rating], budget_rating: params[:budget_rating], distance_rating: params[:distance_rating], uniqueness_rating: params[:uniqueness_rating]})
     end
   end
@@ -113,7 +114,6 @@ class RestaurantRecommendationsController < ApplicationController
     end
 
     def calculate_overall_ranking(restaurant)
-
       weights = {
         cost: 0.30,
         distance: 0.20,
@@ -122,22 +122,23 @@ class RestaurantRecommendationsController < ApplicationController
         preferred_cuisine: 0.10
       }
 
-      distance = UserDistance.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.nil? ? 15 : UserDistance.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.distance_from_user
+      distance = @loaded_user_distances.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.nil? ? 15 : UserDistance.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.distance_from_user
 
+      ratings_index = 2*restaurant.rating*weights[:ratings]
+      cost_index = 2*(5-restaurant.cost)*weights[:cost]
 
-      ratings_index = restaurant.rating*weights[:ratings]
-      cost_index = restaurant.cost*weights[:cost]
+      distance_index = 0
+      distance_index = ((10.0 - (distance/1609.0)))*weights[:cost] unless ((10.0 - (distance/1609.0)) < 0)
 
-      distance_index = ((10.0 - distance)/1609.0)*weights[:cost]
-      if distance_index < 0 
-        distance_index = 0
+      if current_user.preferred_cuisine.downcase == restaurant.cuisine.downcase
+        preferred_cuisine_index = 10*weights[:preferred_cuisine]
+      else
+        preferred_cuisine_index = 0*weights[:preferred_cuisine]
       end
 
-
-      # uniqueness_index = restaurant.cost*weights[:cost]
-      # preferred_cuisine_index = restaurant.cost*weights[:cost]
       uniqueness_index = 0
-      preferred_cuisine_index = 0
+      total_times_attended = @loaded_attended_restaurants.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).size
+      uniqueness_index = (10 - total_times_attended)*weights[:times_attended] unless ((10.0 - total_times_attended) < 0)
 
       array = [ratings_index, cost_index, distance_index, uniqueness_index, preferred_cuisine_index]
 
