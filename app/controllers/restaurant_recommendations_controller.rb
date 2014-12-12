@@ -91,11 +91,11 @@ class RestaurantRecommendationsController < ApplicationController
 
       @loaded_restaurants.each { |restaurant|
 
+      if get_distance_in_miles(restaurant) < 15
         overall_rating = calculate_overall_ranking(restaurant)
         budget_rating = calculate_budget_ranking(restaurant)
         distance_rating = calculate_distance_ranking(restaurant)
-        uniqueness_rating = 0.0
-
+        uniqueness_rating = calculate_uniqueness_ranking(restaurant)
 
         params = {
           user_id: current_user.id, restaurant_id: restaurant.id, 
@@ -110,6 +110,7 @@ class RestaurantRecommendationsController < ApplicationController
         else
           update(params)
         end
+      end
       }
     end
 
