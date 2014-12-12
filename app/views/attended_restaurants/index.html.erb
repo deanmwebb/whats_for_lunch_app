@@ -1,24 +1,35 @@
-<h1>Listing attended_restaurants</h1>
+<%- model_class = AttendedRestaurant -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
 
-<table>
+<table class="table table-striped">
   <thead>
     <tr>
-      <th>Restaurant</th>
-      <th>User</th>
-      <th>Date attended</th>
-      <th colspan="3"></th>
+      <th><%= model_class.human_attribute_name(:restaurant_id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:date_attended) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
 
   <tbody>
-    <% @attended_restaurants.each do |attended_restaurant| %>
+    <% @attended_restaurants.where(user_id: current_user.id).each do |attended_restaurant| %>
       <tr>
-        <td><%= attended_restaurant.restaurant_id %></td>
-        <td><%= attended_restaurant.user_id %></td>
-        <td><%= attended_restaurant.date_attended %></td>
-        <td><%= link_to 'Show', attended_restaurant %></td>
-        <td><%= link_to 'Edit', edit_attended_restaurant_path(attended_restaurant) %></td>
-        <td><%= link_to 'Destroy', attended_restaurant, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= Restaurant.find(attended_restaurant.restaurant_id).name %></td>
+        <td><%= User.find(attended_restaurant.user_id).username %></td>
+        <td><%= attended_restaurant.date_attended.strftime("%m/%d/%Y") %></td>
+        <td>
+          <%= link_to t('.show', :default => t("helpers.links.show")),
+                      attended_restaurant_path(attended_restaurant), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_attended_restaurant_path(attended_restaurant), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      attended_restaurant_path(attended_restaurant),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
       </tr>
     <% end %>
   </tbody>

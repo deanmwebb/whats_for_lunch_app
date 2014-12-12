@@ -1,5 +1,6 @@
 class UserDistancesController < ApplicationController
   before_action :set_user_distance, only: [:show, :edit, :update, :destroy]
+  before_action :load_existing_restaurants
 
   # GET /user_distances
   # GET /user_distances.json
@@ -24,7 +25,6 @@ class UserDistancesController < ApplicationController
   # POST /user_distances
   # POST /user_distances.json
   def create(params)
-    @user_distance = UserDistance.new(user_distance_params)
 
      if params.length == 0
         @user_distance = UserDistance.new(user_distance_params)
@@ -41,7 +41,7 @@ class UserDistancesController < ApplicationController
   else
     #Preloading Database With Data from Google API
      @user_distance = UserDistance.new(user_id: params[:user_id], restaurant_id: params[:restaurant_id], distance_from_user: params[:distance_from_user], drive_time_for_user: params[:drive_time_for_user])
-     @user_distance.save 
+     raise "Could not save User Distance Data! " unless @user_distance.save
    end
   end
 
@@ -74,6 +74,30 @@ class UserDistancesController < ApplicationController
     def set_user_distance
       @user_distance = UserDistance.find(params[:id])
     end
+
+    def load_existing_restaurants  
+      Restaurant.all.each do |place|
+          creation_params = {
+              user_id: current_user.id,
+              restaurant_id: place[:id]
+            }
+
+        if UserDistance.where("user_id = ? AND  restaurant_id = ?", creation_params[:user_id], creation_params[:restaurant_id]).first.nil?
+
+          logger.info "Calcuating Distance for all restaurants in database for #{current_user.username}..."
+          
+
+            distance = RestaurantsHelper.calculate_distance_using_google_api({"formatted_address" => current_user.address}, {"formatted_address" => place.address})
+            logger.info "Distance/Duration between two points: #{distance}"
+
+            creation_params[:distance_from_user] = distance[:distance_from_user]
+            creation_params[:drive_time_for_user] = distance[:drive_time_for_user]
+            
+            create(creation_params)
+          end
+        end
+     end
+
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_distance_params

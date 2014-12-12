@@ -51,7 +51,7 @@ class RestaurantsController < ApplicationController
     end
   else
     #Preloading Database With Data from Google API
-     @restaurant = Restaurant.new(name: params[:name], address: params[:address], cost: params[:cost], rating: params[:rating] , cuisine: params[:cuisine])
+     @restaurant = Restaurant.new(name: params[:name], address: params[:address], cost: params[:cost], rating: params[:rating] , cuisine: params[:cuisine], website: params[:website], phone_number: params[:phone_number])
      @restaurant.save 
 
      logger.info "INFO: Logging User Distance to Database... user_id: #{current_user[:id]}, restaurant_id: #{@restaurant[:id]}, distance_from_user: #{params[:distance_from_user]} Meters, drive_time_for_user: #{params[:drive_time_for_user]} Seconds"
@@ -87,19 +87,12 @@ class RestaurantsController < ApplicationController
   end
     
     def load_restaurants_from_google_api
-      #if @places.nil?
           logger.info "Querying Google API for Places near #{current_user.address}..."
 
-            #Get Home Address
-            query_home_address
-
-            #Get Nearby Places
-            query_nearby_places
+          #Get Nearby Places
+          @places = query_nearby_places
 
           @places.each do |place|
-
-            distance = calculate_distance_using_google_api(@home_address_gps, place)
-            logger.info "Distance/Duration between two points: #{distance}"
 
             creation_params = {
               name: place["name"].capitalize,
@@ -107,40 +100,31 @@ class RestaurantsController < ApplicationController
               rating: place["rating"].to_f,
               cuisine: place["types"].first.gsub("_"," ").split()[0].capitalize,
               cost: place["price_level"].nil? ? 3 : place["price_level"].next,
-              distance_from_user: distance[:distance_from_user],
-              drive_time_for_user: distance[:drive_time_for_user]
+              phone_number: place["formatted_phone_number"].nil? ? "" : place["formatted_phone_number"],
+              website: place["website"].nil? ? "" : place["website"],
             }
 
             if Restaurant.where(name: creation_params[:name]).first.nil? && Restaurant.where(address: creation_params[:address]).first.nil?
-                  create(creation_params)
+              
+              distance = RestaurantsHelper.calculate_distance_using_google_api({"formatted_address" => current_user.address}, place)
+
+              creation_params[:distance_from_user] = distance[:distance_from_user].nil? ? 1000 : distance[:distance_from_user]
+              creation_params[:drive_time_for_user] = distance[:drive_time_for_user].nil? ? 600 : distance[:drive_time_for_user]
+
+              logger.info "Distance/Duration between two points: #{distance}"
+
+            create(creation_params)
           end
         end
-      #end
      end
 
-       
 
     private
 
-    def query_home_address
-        uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
-        params = { 
-          :key => "AIzaSyAw-ItKGrTc6KTfnXwNa2s9KixqrKHVl1c", 
-          :query => current_user.address 
-        }
-        uri.query = URI.encode_www_form(params)
-
-        res = Net::HTTP.get_response(uri)
-
-       logger.info "Response from Querying Home: #{res.body}"
-
-       @home_address_gps = JSON.parse(res.body)["results"].first
-     end
-
      def query_nearby_places
-            uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
-            params = { 
-              key: "AIzaSyBZzPpygsuj-so-IUWVI87GTrWRQD2TDvU", 
+        uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
+          params = { 
+              key: ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY","AIzaSyAw-ItKGrTc6KTfnXwNa2s9KixqrKHVl1c"].sample, 
               query: "Places near #{current_user.address}",
               types: "restaurant|food",
               radius: 16093
@@ -148,9 +132,9 @@ class RestaurantsController < ApplicationController
           uri.query = URI.encode_www_form(params)
 
           res = Net::HTTP.get_response(uri)
-         logger.info "Response from Querying Places: #{res.body}"
+          logger.info "Response from Querying Places: #{res.body}"
 
-         @places = JSON.parse(res.body)["results"]
+          JSON.parse(res.body)["results"]
         end
 
         def retry_collecting_places(next_token)
@@ -173,30 +157,6 @@ class RestaurantsController < ApplicationController
         next_token = JSON.parse(res.body)["next_page_token"]
         end
 
-     def calculate_distance_using_google_api(origin_address_gps, destination_address_gps)
-       logger.info "Using Google Maps API to Calculate Distance between #{origin_address_gps["formatted_address"]} and #{destination_address_gps["formatted_address"]}"
-       uri = URI('https://maps.googleapis.com/maps/api/distancematrix/json')
-
-       params = { 
-            origins: "#{origin_address_gps["formatted_address"]}",
-            destinations: "#{destination_address_gps["formatted_address"]}",  
-            key: "AIzaSyBZzPpygsuj-so-IUWVI87GTrWRQD2TDvU",
-            mode: "driving"
-          }
-
-          uri.query = URI.encode_www_form(params)
-
-          res = Net::HTTP.get_response(uri)
-         logger.info "Response from Google Maps API: #{res.body}"
-
-         @distance_result = {
-          distance_from_user: JSON.parse(res.body)["rows"].first["elements"].first["distance"]["value"],
-          drive_time_for_user: JSON.parse(res.body)["rows"].first["elements"].first["duration"]["value"]
-        }
-         logger.info "Distance Result: #{@distance_result} Meters | Seconds"
-         @distance_result
-       end
-
     # Use callbacks to share common setup or constraints between actions.
     def set_restaurant
       @restaurant = Restaurant.find(params[:id])
@@ -204,6 +164,6 @@ class RestaurantsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def restaurant_params
-      params.require(:restaurant).permit(:id, :name, :address, :cuisine, :cost, :rating, :last_attended)
+      params.require(:restaurant).permit(:id, :name, :address, :cuisine, :cost, :rating, :last_attended, :phone_number, :website)
     end
 end

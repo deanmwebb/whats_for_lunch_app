@@ -11,8 +11,8 @@
       <th><%= model_class.human_attribute_name(:cuisine) %></th>
       <th><%= model_class.human_attribute_name(:cost) %></th>
       <th><%= model_class.human_attribute_name(:rating) %></th>
+      <th><%= model_class.human_attribute_name(:phone_number) %></th>
       <th><%= model_class.human_attribute_name(:last_attended) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -25,9 +25,11 @@
         <td><%= restaurant.cuisine %></td>
         <td><%= restaurant.cost %></td>
         <td><%= restaurant.rating %></td>
-        <td><%= restaurant.last_attended %></td>
-        <td><%=l restaurant.created_at %></td>
+        <td><%= restaurant.phone_number %></td>
+        <td><%= restaurant.last_attended.strftime("%m/%d/%Y") unless restaurant.last_attended.nil? %></td>
         <td>
+          <%= link_to t('.show', :default => t("helpers.links.show")),
+                      restaurant_path(restaurant), :class => 'btn btn-default btn-xs' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_restaurant_path(restaurant), :class => 'btn btn-default btn-xs' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),

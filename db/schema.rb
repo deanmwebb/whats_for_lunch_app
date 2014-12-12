@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(version: 20141211132416) do
     t.string   "name"
     t.string   "address"
     t.string   "cuisine"
+    t.string   "website"
+    t.string   "phone_number"
     t.integer  "cost"
     t.decimal  "rating"
     t.datetime "last_attended"

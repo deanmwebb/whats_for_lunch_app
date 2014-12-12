@@ -9,6 +9,10 @@
   <%= error_span(@restaurant[:cost]) %>
   <%= f.input :rating %>
   <%= error_span(@restaurant[:rating]) %>
+  <%= f.input :phone_number %>
+  <%= error_span(@restaurant[:phone_number]) %>
+  <%= f.input :website %>
+  <%= error_span(@restaurant[:website]) %>
   <%= f.label :last_attended, "Date Last Attended (Optional)" %>
   <%= f.text_field :last_attended, :id => "datepicker", :value => Date.today %>
   <%= error_span(@restaurant[:last_attended]) %>
