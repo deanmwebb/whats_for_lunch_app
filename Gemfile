@@ -4,11 +4,11 @@ ruby '2.1.4'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.4'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3', :group => [:development, :test] 
+gem 'sqlite3', :group => [:development, :test]
 
-group :production do 
-	gem 'thin' 
-	gem 'pg' 
+group :production do
+  gem 'thin'
+  gem 'pg'
 end
 
 gem "twitter-bootstrap-rails"
@@ -52,4 +52,3 @@ gem 'spring',        group: :development
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-

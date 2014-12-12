@@ -29,7 +29,7 @@ class AttendedRestaurantsController < ApplicationController
     if params.length == 0
       @attended_restaurant = AttendedRestaurant.new(attended_restaurant_params)
     else
-      
+
       @attended_restaurant = AttendedRestaurant.new(params)
     end
 
@@ -69,13 +69,13 @@ class AttendedRestaurantsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_attended_restaurant
-      @attended_restaurant = AttendedRestaurant.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_attended_restaurant
+    @attended_restaurant = AttendedRestaurant.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def attended_restaurant_params
-      params.require(:attended_restaurant).permit(:restaurant_id, :user_id, :date_attended)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def attended_restaurant_params
+    params.require(:attended_restaurant).permit(:restaurant_id, :user_id, :date_attended)
+  end
 end
