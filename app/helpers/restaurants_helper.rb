@@ -17,7 +17,7 @@ module RestaurantsHelper
           @ip_address = ip.ip_address if ip
         end
 
-        Rails.logger.info "IP Address is #{@ip_address}
+        Rails.logger.info "IP Address is #{@ip_address}"
 
        params = { 
             origins: "#{origin_address_gps["formatted_address"]}",
