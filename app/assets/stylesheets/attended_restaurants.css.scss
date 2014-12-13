@@ -1,3 +1,41 @@
 // Place all the styles related to the AttendedRestaurants controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+$gray-medium-light: #eaeaea;
+$gray-darker: #222;
+$gray-light: #a9a9a9;
+$gray: #a9a9a9;
+
+/* footer */
+
+footer {
+  background-color: white;
+	position:fixed;
+	left:0px;
+	bottom:0px;
+	height:30px;
+	width:100%;
+
+
+	padding-top: 5px;
+	border-top: 1px solid $gray-medium-light;
+	color: $gray-light;
+	a {
+		color: $gray;
+		&:hover {
+			color: $gray-darker;
+		}
+	}
+	small {
+		float: left;
+	}
+	ul {
+		float: right;
+		list-style: none;
+		li {
+			float: left;
+			margin-left: 10px;
+		}
+	}
+}

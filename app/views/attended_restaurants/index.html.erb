@@ -37,4 +37,6 @@
 
 <br>
 
-<%= link_to 'New Attended restaurant', new_attended_restaurant_path %>
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_attended_restaurant_path,
+            :class => 'btn btn-primary' %>
