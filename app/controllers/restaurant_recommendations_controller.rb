@@ -123,14 +123,7 @@ class RestaurantRecommendationsController < ApplicationController
       preferred_cuisine: 0.10
     }
 
-    ratings_index = calculate_ratings_index(restaurant, weights)
-    cost_index = calculate_cost_index(restaurant, weights)
-    distance_index = calculate_distance_index(restaurant, weights)
-    preferred_cuisine_index = calculate_preferred_cuisine_index(restaurant, weights)
-    uniqueness_index = calculate_uniqueness_index(restaurant, weights)
-
-    array = [ratings_index, cost_index, distance_index, uniqueness_index, preferred_cuisine_index]
-    array.map{|x| x.to_f}.reduce(:+)
+    calculate_indices.map{|x| x.to_f}.reduce(:+)
   end
 
   def calculate_budget_ranking(restaurant)
@@ -143,14 +136,7 @@ class RestaurantRecommendationsController < ApplicationController
     }
     budget_index = 0
     if(restaurant.cost <= 2)
-      ratings_index = calculate_ratings_index(restaurant, weights)
-      cost_index = calculate_cost_index(restaurant, weights)
-      distance_index = calculate_distance_index(restaurant, weights)
-      preferred_cuisine_index = calculate_preferred_cuisine_index(restaurant, weights)
-      uniqueness_index = calculate_uniqueness_index(restaurant, weights)
-
-      array = [ratings_index, cost_index, distance_index, uniqueness_index, preferred_cuisine_index]
-      budget_index = array.map{|x| x.to_f}.reduce(:+)
+      budget_index = calculate_indices.map{|x| x.to_f}.reduce(:+)
     end
   end
 
@@ -164,14 +150,7 @@ class RestaurantRecommendationsController < ApplicationController
     }
     distance_ranking = 0
     if(get_distance_in_miles(restaurant) <= 1.5)
-      ratings_index = calculate_ratings_index(restaurant, weights)
-      cost_index = calculate_cost_index(restaurant, weights)
-      distance_index = calculate_distance_index(restaurant, weights)
-      preferred_cuisine_index = calculate_preferred_cuisine_index(restaurant, weights)
-      uniqueness_index = calculate_uniqueness_index(restaurant, weights)
-
-      array = [ratings_index, cost_index, distance_index, uniqueness_index, preferred_cuisine_index]
-      distance_ranking = array.map{|x| x.to_f}.reduce(:+)
+      distance_ranking = calculate_indices.map{|x| x.to_f}.reduce(:+)
     end
   end
 
@@ -186,50 +165,20 @@ class RestaurantRecommendationsController < ApplicationController
 
     uniqueness_ranking = 0
     if(@loaded_attended_restaurants.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).count <= 2)
-      ratings_index = calculate_ratings_index(restaurant, weights)
-      cost_index = calculate_cost_index(restaurant, weights)
-      distance_index = calculate_distance_index(restaurant, weights)
-      preferred_cuisine_index = calculate_preferred_cuisine_index(restaurant, weights)
-      uniqueness_index = calculate_uniqueness_index(restaurant, weights)
-
-      array = [ratings_index, cost_index, distance_index, uniqueness_index, preferred_cuisine_index]
-      uniqueness_ranking = array.map{|x| x.to_f}.reduce(:+)
+      uniqueness_ranking = calculate_indices.map{|x| x.to_f}.reduce(:+)
     end
   end
 
-  def calculate_distance_index(restaurant, weights)
-    distance_index = 0
-    distance_miles = get_distance_in_miles(restaurant)
-    distance_index = (10.0 - distance_miles)*weights[:distance] unless ((10.0 - distance_miles) < 0)
+  def calculate_indices
+      ratings_index = RestaurantRecommendationsHelper.calculate_ratings_index(restaurant, weights)
+      cost_index = RestaurantRecommendationsHelper.calculate_cost_index(restaurant, weights)
+      distance_index = RestaurantRecommendationsHelper.calculate_distance_index(restaurant, weights)
+      preferred_cuisine_index = RestaurantRecommendationsHelper.calculate_preferred_cuisine_index(restaurant, weights)
+      uniqueness_index = RestaurantRecommendationsHelper.calculate_uniqueness_index(restaurant, weights)
+
+      [ratings_index, cost_index, distance_index, uniqueness_index, preferred_cuisine_index]
   end
 
-  def get_distance_in_miles(restaurant)
-    distance_meters = @loaded_user_distances.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.nil? ? 15 : @loaded_user_distances.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.distance_from_user
-    logger.info "DISTANCE IN MILES FROM USER #{current_user.username} TO RESTAURANT #{restaurant.address} IS  #{distance_meters/1609.0}"
-    distance_miles = (distance_meters/1609.0)
-  end
-
-  def calculate_cost_index(restaurant, weights)
-    2*(5-restaurant.cost)*weights[:cost]
-  end
-
-  def calculate_ratings_index(restaurant, weights)
-    2*restaurant.rating*weights[:ratings]
-  end
-
-  def calculate_uniqueness_index(restaurant, weights)
-    uniqueness_index = 0
-    total_times_attended = @loaded_attended_restaurants.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).count
-    uniqueness_index = (10 - total_times_attended)*weights[:times_attended] unless ((10.0 - total_times_attended) < 0)
-  end
-
-  def calculate_preferred_cuisine_index(restaurant, weights)
-    if current_user.preferred_cuisine.downcase == restaurant.cuisine.downcase
-      preferred_cuisine_index = 10*weights[:preferred_cuisine]
-    else
-      preferred_cuisine_index = 0*weights[:preferred_cuisine]
-    end
-  end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def restaurant_recommendation_params
