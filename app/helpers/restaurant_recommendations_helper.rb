@@ -1,15 +1,15 @@
 module RestaurantRecommendationsHelper
 
 
-  def self.calculate_distance_index(restaurant, weights)
+  def self.calculate_distance_index(loaded_user_distances, current_user, restaurant, weights)
     distance_index = 0
-    distance_miles = get_distance_in_miles(restaurant)
+    distance_miles = get_distance_in_miles(loaded_user_distances, current_user, restaurant)
     distance_index = (10.0 - distance_miles)*weights[:distance] unless ((10.0 - distance_miles) < 0)
   end
 
-  def self.get_distance_in_miles(restaurant)
-    distance_meters = @loaded_user_distances.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.nil? ? 15 : @loaded_user_distances.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.distance_from_user
-    logger.info "DISTANCE IN MILES FROM USER #{current_user.username} TO RESTAURANT #{restaurant.address} IS  #{distance_meters/1609.0}"
+  def self.get_distance_in_miles(loaded_user_distances, current_user, restaurant)
+    distance_meters = loaded_user_distances.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.nil? ? 15 : loaded_user_distances.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).first.distance_from_user
+    Rails.logger.info "DISTANCE IN MILES FROM USER #{current_user.username} TO RESTAURANT #{restaurant.address} IS  #{distance_meters/1609.0}"
     distance_miles = (distance_meters/1609.0)
   end
 
@@ -21,13 +21,13 @@ module RestaurantRecommendationsHelper
     2*restaurant.rating*weights[:ratings]
   end
 
-  def self.calculate_uniqueness_index(restaurant, weights)
+  def self.calculate_uniqueness_index(loaded_attended_restaurants, current_user, restaurant, weights)
     uniqueness_index = 0
-    total_times_attended = @loaded_attended_restaurants.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).count
+    total_times_attended = loaded_attended_restaurants.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).count
     uniqueness_index = (10 - total_times_attended)*weights[:times_attended] unless ((10.0 - total_times_attended) < 0)
   end
 
-  def self.calculate_preferred_cuisine_index(restaurant, weights)
+  def self.calculate_preferred_cuisine_index(current_user, restaurant, weights)
     if current_user.preferred_cuisine.downcase == restaurant.cuisine.downcase
       preferred_cuisine_index = 10*weights[:preferred_cuisine]
     else

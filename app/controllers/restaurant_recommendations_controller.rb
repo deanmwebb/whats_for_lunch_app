@@ -12,17 +12,13 @@ class RestaurantRecommendationsController < ApplicationController
     @restaurant_recommendations = RestaurantRecommendation.all.where(user_id: current_user.id)
   end
 
-  # GET /restaurant_recommendations/1
-  # GET /restaurant_recommendations/1.json
   def show
   end
 
-  # GET /restaurant_recommendations/new
   def new
     @restaurant_recommendation = RestaurantRecommendation.new
   end
 
-  # GET /restaurant_recommendations/1/edit
   def edit
   end
 
@@ -78,7 +74,6 @@ class RestaurantRecommendationsController < ApplicationController
   end
 
   private
-  # Use callbacks to share common setup or constraints between actions.
   def set_restaurant_recommendation
     @restaurant_recommendation = RestaurantRecommendation.find(params[:id])
   end
@@ -91,7 +86,7 @@ class RestaurantRecommendationsController < ApplicationController
 
     @loaded_restaurants.each { |restaurant|
 
-      if get_distance_in_miles(restaurant) < 15
+      if RestaurantRecommendationsHelper.get_distance_in_miles(@loaded_attended_restaurants, current_user, restaurant) < 15
         overall_rating = calculate_overall_ranking(restaurant)
         budget_rating = calculate_budget_ranking(restaurant)
         distance_rating = calculate_distance_ranking(restaurant)
@@ -123,7 +118,7 @@ class RestaurantRecommendationsController < ApplicationController
       preferred_cuisine: 0.10
     }
 
-    calculate_indices.map{|x| x.to_f}.reduce(:+)
+    calculate_indices(restaurant, weights).map{|x| x.to_f}.reduce(:+)
   end
 
   def calculate_budget_ranking(restaurant)
@@ -136,7 +131,7 @@ class RestaurantRecommendationsController < ApplicationController
     }
     budget_index = 0
     if(restaurant.cost <= 2)
-      budget_index = calculate_indices.map{|x| x.to_f}.reduce(:+)
+      budget_index = calculate_indices(restaurant, weights).map{|x| x.to_f}.reduce(:+)
     end
   end
 
@@ -149,8 +144,8 @@ class RestaurantRecommendationsController < ApplicationController
       preferred_cuisine: 0.035
     }
     distance_ranking = 0
-    if(get_distance_in_miles(restaurant) <= 1.5)
-      distance_ranking = calculate_indices.map{|x| x.to_f}.reduce(:+)
+    if(RestaurantRecommendationsHelper.get_distance_in_miles(@loaded_user_distances, current_user, restaurant) <= 1.5)
+      distance_ranking = calculate_indices(restaurant, weights).map{|x| x.to_f}.reduce(:+)
     end
   end
 
@@ -165,22 +160,20 @@ class RestaurantRecommendationsController < ApplicationController
 
     uniqueness_ranking = 0
     if(@loaded_attended_restaurants.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant.id).count <= 2)
-      uniqueness_ranking = calculate_indices.map{|x| x.to_f}.reduce(:+)
+      uniqueness_ranking = calculate_indices(restaurant, weights).map{|x| x.to_f}.reduce(:+)
     end
   end
 
-  def calculate_indices
+  def calculate_indices(restaurant, weights)
       ratings_index = RestaurantRecommendationsHelper.calculate_ratings_index(restaurant, weights)
       cost_index = RestaurantRecommendationsHelper.calculate_cost_index(restaurant, weights)
-      distance_index = RestaurantRecommendationsHelper.calculate_distance_index(restaurant, weights)
-      preferred_cuisine_index = RestaurantRecommendationsHelper.calculate_preferred_cuisine_index(restaurant, weights)
-      uniqueness_index = RestaurantRecommendationsHelper.calculate_uniqueness_index(restaurant, weights)
+      distance_index = RestaurantRecommendationsHelper.calculate_distance_index(@loaded_user_distances, current_user, restaurant, weights)
+      preferred_cuisine_index = RestaurantRecommendationsHelper.calculate_preferred_cuisine_index(current_user, restaurant, weights)
+      uniqueness_index = RestaurantRecommendationsHelper.calculate_uniqueness_index(@loaded_attended_restaurants, current_user, restaurant, weights)
 
       [ratings_index, cost_index, distance_index, uniqueness_index, preferred_cuisine_index]
   end
 
-
-  # Never trust parameters from the scary internet, only allow the white list through.
   def restaurant_recommendation_params
     params.require(:restaurant_recommendation).permit(:restaurant_id, :user_id, :overall_rating, :budget_rating, :distance_rating, :uniqueness_rating)
   end
