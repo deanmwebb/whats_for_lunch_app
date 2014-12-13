@@ -17,23 +17,7 @@
   </thead>
   <tbody>
     <% @restaurant_recommendations.where(user_id: current_user.id).order(:overall_rating).reverse.take(3).each do |restaurant_recommendation| %>
-      <tr>
-        <td><%= link_to restaurant_recommendation.id, restaurant_recommendation_path(restaurant_recommendation) %></td>
-        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
-        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
-        <td><%= "#{(UserDistance.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant_recommendation.restaurant_id).first.distance_from_user/1609.0).round(2)} mi" %></td>
-        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
-        <td><%= restaurant_recommendation.overall_rating.round(2) %></td>
-        <td>
-          <%= link_to t('.show', :default => t("helpers.links.show")),
-                      restaurant_recommendation_path(restaurant_recommendation), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      restaurant_recommendation_path(restaurant_recommendation),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %>
-        </td>
-      </tr>
+      <%= render 'layouts/recommendations_table', restaurant_recommendation: restaurant_recommendation %>
     <% end %>
   </tbody>
 </table>
@@ -56,23 +40,7 @@
   </thead>
   <tbody>
     <% @restaurant_recommendations.where(user_id: current_user.id).order(:budget_rating).reverse.take(1).each do |restaurant_recommendation| %>
-      <tr>
-        <td><%= link_to restaurant_recommendation.id, restaurant_recommendation_path(restaurant_recommendation) %></td>
-        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
-        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
-        <td><%= "#{(UserDistance.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant_recommendation.restaurant_id).first.distance_from_user/1609.0).round(2)} mi" %></td>
-        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
-        <td><%= restaurant_recommendation.budget_rating.round(2) %></td>
-        <td>
-          <%= link_to t('.show', :default => t("helpers.links.show")),
-                      restaurant_recommendation_path(restaurant_recommendation), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      restaurant_recommendation_path(restaurant_recommendation),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %>
-        </td>
-      </tr>
+    <%= render 'layouts/recommendations_table', restaurant_recommendation: restaurant_recommendation %>
     <% end %>
   </tbody>
 </table>
@@ -95,23 +63,7 @@
   </thead>
   <tbody>
     <% @restaurant_recommendations.order(:distance_rating).reverse.take(1).each do |restaurant_recommendation| %>
-      <tr>
-        <td><%= link_to restaurant_recommendation.id, restaurant_recommendation_path(restaurant_recommendation) %></td>
-        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
-        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
-        <td><%= "#{(UserDistance.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant_recommendation.restaurant_id).first.distance_from_user/1609.0).round(2)} mi" %></td>
-        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
-        <td><%= restaurant_recommendation.distance_rating.round(2) %></td>
-        <td>
-        <%= link_to t('.show', :default => t("helpers.links.show")),
-                      restaurant_recommendation_path(restaurant_recommendation), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      restaurant_recommendation_path(restaurant_recommendation),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %>
-        </td>
-      </tr>
+    <%= render 'layouts/recommendations_table', restaurant_recommendation: restaurant_recommendation %>
     <% end %>
   </tbody>
 </table>
@@ -135,23 +87,7 @@
   </thead>
   <tbody>
     <% @restaurant_recommendations.order(:uniqueness_rating).reverse.take(1).each do |restaurant_recommendation| %>
-      <tr>
-        <td><%= link_to restaurant_recommendation.id, restaurant_recommendation_path(restaurant_recommendation) %></td>
-        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
-        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
-        <td><%= "#{(UserDistance.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant_recommendation.restaurant_id).first.distance_from_user/1609.0).round(2)} mi" %></td>
-        <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
-        <td><%= restaurant_recommendation.uniqueness_rating.round(2) %></td>
-        <td>
-          <%= link_to t('.show', :default => t("helpers.links.show")),
-                      restaurant_recommendation_path(restaurant_recommendation), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      restaurant_recommendation_path(restaurant_recommendation),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %>
-        </td>
-      </tr>
+    <%= render 'layouts/recommendations_table', restaurant_recommendation: restaurant_recommendation %>
     <% end %>
   </tbody>
 </table>
