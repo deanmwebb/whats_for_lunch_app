@@ -14,7 +14,7 @@ module RestaurantsHelper
           key = "AIzaSyDNMJwNQiqU1-0KHZXz6omHpzCaqY5gKCs"
 
           ip=Socket.ip_address_list.detect{|intf| intf.ipv4_private?}
-          @ip_address = ip.ip_address if ip
+          @ip_address = "54.197.242.176"
         end
 
         Rails.logger.info "IP Address is #{@ip_address}"
