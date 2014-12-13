@@ -21,7 +21,7 @@
         <td><%= link_to restaurant_recommendation.id, restaurant_recommendation_path(restaurant_recommendation) %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
-        <td><%= "#{(UserDistance.find(restaurant_recommendation.restaurant_id).distance_from_user/1609.0).round(2)} mi" %></td>
+        <td><%= "#{(UserDistance.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant_recommendation.restaurant_id).first.distance_from_user/1609.0).round(2)} mi" %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
         <td><%= restaurant_recommendation.overall_rating.round(2) %></td>
         <td>
@@ -60,7 +60,7 @@
         <td><%= link_to restaurant_recommendation.id, restaurant_recommendation_path(restaurant_recommendation) %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
-        <td><%= "#{(UserDistance.find(restaurant_recommendation.restaurant_id).distance_from_user/1609.0).round(2)} mi" %></td>
+        <td><%= "#{(UserDistance.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant_recommendation.restaurant_id).first.distance_from_user/1609.0).round(2)} mi" %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
         <td><%= restaurant_recommendation.budget_rating.round(2) %></td>
         <td>
@@ -99,7 +99,7 @@
         <td><%= link_to restaurant_recommendation.id, restaurant_recommendation_path(restaurant_recommendation) %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
-        <td><%= "#{(UserDistance.find(restaurant_recommendation.restaurant_id).distance_from_user/1609.0).round(2)} mi" %></td>
+        <td><%= "#{(UserDistance.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant_recommendation.restaurant_id).first.distance_from_user/1609.0).round(2)} mi" %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
         <td><%= restaurant_recommendation.distance_rating.round(2) %></td>
         <td>
@@ -139,7 +139,7 @@
         <td><%= link_to restaurant_recommendation.id, restaurant_recommendation_path(restaurant_recommendation) %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).name %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).address %></td>
-        <td><%= "#{(UserDistance.find(restaurant_recommendation.restaurant_id).distance_from_user/1609.0).round(2)} mi" %></td>
+        <td><%= "#{(UserDistance.where("user_id = ? AND  restaurant_id = ?", current_user.id, restaurant_recommendation.restaurant_id).first.distance_from_user/1609.0).round(2)} mi" %></td>
         <td><%= Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.strftime("%m/%d/%Y") unless Restaurant.find(restaurant_recommendation.restaurant_id).last_attended.nil? %></td>
         <td><%= restaurant_recommendation.uniqueness_rating.round(2) %></td>
         <td>
