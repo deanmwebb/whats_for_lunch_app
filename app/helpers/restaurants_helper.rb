@@ -23,7 +23,7 @@ module RestaurantsHelper
             origins: "#{origin_address_gps["formatted_address"]}",
             destinations: "#{destination_address_gps["formatted_address"]}",  
             key: key,
-            userIp: @ip_address,
+            userIp: "54.197.242.176",
             mode: "driving"
           }
 
@@ -57,7 +57,7 @@ module RestaurantsHelper
               key: key, 
               query: "Places near #{current_user_address}",
               types: "restaurant|food",
-              userIp: @ip_address,
+              userIp: "54.197.242.176",
               radius: 16093 #10 mile radius
             }
 
