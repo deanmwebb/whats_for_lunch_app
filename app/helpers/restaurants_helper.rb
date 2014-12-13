@@ -45,30 +45,30 @@ module RestaurantsHelper
          @distance_result
        end
 
-      def self.query_nearby_places(current_user_address)
-        if Rails.env.production?
-          key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY","AIzaSyAw-ItKGrTc6KTfnXwNa2s9KixqrKHVl1c"].sample
-        else
-          key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY","AIzaSyAw-ItKGrTc6KTfnXwNa2s9KixqrKHVl1c"].sample
-        end
+  def self.query_nearby_places(current_user_address)
+    if Rails.env.production?
+      key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY","AIzaSyAw-ItKGrTc6KTfnXwNa2s9KixqrKHVl1c"].sample
+    else
+      key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY","AIzaSyAw-ItKGrTc6KTfnXwNa2s9KixqrKHVl1c"].sample
+    end
 
-        uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
-          params = { 
-              key: key, 
-              query: "Places near #{current_user_address}",
-              types: "restaurant|food",
-              userIp: "54.197.242.176",
-              radius: 16093 #10 mile radius
-            }
+    uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
+      params = { 
+          key: key, 
+          query: "Places near #{current_user_address}",
+          types: "restaurant|food",
+          userIp: "54.197.242.176",
+          radius: 16093 #10 mile radius
+        }
 
-          Rails.logger.info "Parameters from query_nearby_places method #{params}"
+      Rails.logger.info "Parameters from query_nearby_places method #{params}"
 
 
-          uri.query = URI.encode_www_form(params)
+      uri.query = URI.encode_www_form(params)
 
-          res = Net::HTTP.get_response(uri)
-          Rails.logger.info "Response from Querying Places: #{res.body}"
+      res = Net::HTTP.get_response(uri)
+      Rails.logger.info "Response from Querying Places: #{res.body}"
 
-          JSON.parse(res.body)["results"]
-        end
+      JSON.parse(res.body)["results"]
+    end
 end
