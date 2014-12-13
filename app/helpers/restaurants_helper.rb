@@ -1,4 +1,5 @@
 require 'rails'
+require 'socket'
 
 module RestaurantsHelper
 
@@ -8,14 +9,19 @@ module RestaurantsHelper
 
         if Rails.env.production?
           key = "AIzaSyDNMJwNQiqU1-0KHZXz6omHpzCaqY5gKCs"
+          @ip_address = "54.197.242.176"
         else
           key = "AIzaSyDNMJwNQiqU1-0KHZXz6omHpzCaqY5gKCs"
+
+          ip=Socket.ip_address_list.detect{|intf| intf.ipv4_private?}
+          @ip_address = ip.ip_address if ip
         end
 
        params = { 
             origins: "#{origin_address_gps["formatted_address"]}",
             destinations: "#{destination_address_gps["formatted_address"]}",  
             key: key,
+            userIp: @ip_address,
             mode: "driving"
           }
 
@@ -47,6 +53,7 @@ module RestaurantsHelper
               key: key, 
               query: "Places near #{current_user_address}",
               types: "restaurant|food",
+              userIp: @ip_address,
               radius: 16093 #10 mile radius
             }
           uri.query = URI.encode_www_form(params)
