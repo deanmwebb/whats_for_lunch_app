@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whats For Lunch?</title>
+    <meta content="authenticity_token" name="csrf-param" />
+<meta content="NaYtfG6B2mmlX8Rxg/5eMm7QV7Bd392/IKyrU0Yx87I=" name="csrf-token" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
+    <![endif]-->
+
+    <link href="/assets/attended_restaurants.css?body=1" media="all" rel="stylesheet" />
+<link href="/assets/twitter-bootstrap-static/bootstrap.css?body=1" media="all" rel="stylesheet" />
+<link href="/assets/twitter-bootstrap-static/fontawesome.css?body=1" media="all" rel="stylesheet" />
+<link href="/assets/bootstrap_and_overrides.css?body=1" media="all" rel="stylesheet" />
+<link href="/assets/restaurant_recommendations.css?body=1" media="all" rel="stylesheet" />
+<link href="/assets/restaurants.css?body=1" media="all" rel="stylesheet" />
+<link href="/assets/scaffolds.css?body=1" media="all" rel="stylesheet" />
+<link href="/assets/user_distances.css?body=1" media="all" rel="stylesheet" />
+<link href="/assets/application.css?body=1" media="all" rel="stylesheet" />
+<link href="/assets/bootstrap-datepicker3.css?body=1" media="all" rel="stylesheet" />
+
+    <!-- For third-generation iPad with high-resolution Retina display: -->
+    <!-- Size should be 144 x 144 pixels -->
+    <link href="/images/apple-touch-icon-144x144-precomposed.png" rel="apple-touch-icon-precomposed" sizes="144x144" type="image/png" />
+
+    <!-- For iPhone with high-resolution Retina display: -->
+    <!-- Size should be 114 x 114 pixels -->
+    <link href="/images/apple-touch-icon-114x114-precomposed.png" rel="apple-touch-icon-precomposed" sizes="114x114" type="image/png" />
+
+    <!-- For first- and second-generation iPad: -->
+    <!-- Size should be 72 x 72 pixels -->
+    <link href="/images/apple-touch-icon-72x72-precomposed.png" rel="apple-touch-icon-precomposed" sizes="72x72" type="image/png" />
+
+    <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+    <!-- Size should be 57 x 57 pixels -->
+    <link href="/images/apple-touch-icon-precomposed.png" rel="apple-touch-icon-precomposed" type="image/png" />
+
+    <!-- For all other devices -->
+    <!-- Size should be 32 x 32 pixels -->
+    <link href="/images/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+
+    <script src="/assets/jquery.js?body=1"></script>
+<script src="/assets/jquery_ujs.js?body=1"></script>
+<script src="/assets/twitter/bootstrap/transition.js?body=1"></script>
+<script src="/assets/twitter/bootstrap/alert.js?body=1"></script>
+<script src="/assets/twitter/bootstrap/modal.js?body=1"></script>
+<script src="/assets/twitter/bootstrap/dropdown.js?body=1"></script>
+<script src="/assets/twitter/bootstrap/scrollspy.js?body=1"></script>
+<script src="/assets/twitter/bootstrap/tab.js?body=1"></script>
+<script src="/assets/twitter/bootstrap/tooltip.js?body=1"></script>
+<script src="/assets/twitter/bootstrap/popover.js?body=1"></script>
+<script src="/assets/twitter/bootstrap/button.js?body=1"></script>
+<script src="/assets/twitter/bootstrap/collapse.js?body=1"></script>
+<script src="/assets/twitter/bootstrap/carousel.js?body=1"></script>
+<script src="/assets/twitter/bootstrap/affix.js?body=1"></script>
+<script src="/assets/twitter/bootstrap.js?body=1"></script>
+<script src="/assets/turbolinks.js?body=1"></script>
+<script src="/assets/attended_restaurants.js?body=1"></script>
+<script src="/assets/bootstrap.js?body=1"></script>
+<script src="/assets/restaurant_recommendations.js?body=1"></script>
+<script src="/assets/restaurants.js?body=1"></script>
+<script src="/assets/user_distances.js?body=1"></script>
+<script src="/assets/jquery-ui/core.js?body=1"></script>
+<script src="/assets/jquery-ui/widget.js?body=1"></script>
+<script src="/assets/jquery-ui/accordion.js?body=1"></script>
+<script src="/assets/jquery-ui/position.js?body=1"></script>
+<script src="/assets/jquery-ui/menu.js?body=1"></script>
+<script src="/assets/jquery-ui/autocomplete.js?body=1"></script>
+<script src="/assets/jquery-ui/button.js?body=1"></script>
+<script src="/assets/jquery-ui/datepicker.js?body=1"></script>
+<script src="/assets/jquery-ui/mouse.js?body=1"></script>
+<script src="/assets/jquery-ui/draggable.js?body=1"></script>
+<script src="/assets/jquery-ui/resizable.js?body=1"></script>
+<script src="/assets/jquery-ui/dialog.js?body=1"></script>
+<script src="/assets/jquery-ui/droppable.js?body=1"></script>
+<script src="/assets/jquery-ui/effect.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-blind.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-bounce.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-clip.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-drop.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-explode.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-fade.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-fold.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-highlight.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-size.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-scale.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-puff.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-pulsate.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-shake.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-slide.js?body=1"></script>
+<script src="/assets/jquery-ui/effect-transfer.js?body=1"></script>
+<script src="/assets/jquery-ui/progressbar.js?body=1"></script>
+<script src="/assets/jquery-ui/selectable.js?body=1"></script>
+<script src="/assets/jquery-ui/selectmenu.js?body=1"></script>
+<script src="/assets/jquery-ui/slider.js?body=1"></script>
+<script src="/assets/jquery-ui/sortable.js?body=1"></script>
+<script src="/assets/jquery-ui/spinner.js?body=1"></script>
+<script src="/assets/jquery-ui/tabs.js?body=1"></script>
+<script src="/assets/jquery-ui/tooltip.js?body=1"></script>
+<script src="/assets/jquery-ui.js?body=1"></script>
+<script src="/assets/autocomplete-rails.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/core.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.ar.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.az.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.bg.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.ca.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.cs.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.cy.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.da.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.de.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.el.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.es.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.et.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.fa.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.fi.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.fr.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.gl.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.he.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.hr.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.hu.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.id.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.is.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.it.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.ja.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.ka.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.kk.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.kr.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.lt.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.lv.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.mk.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.ms.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.nb.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.nl-BE.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.nl.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.no.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.pl.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.pt.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.ro.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.rs-latin.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.rs.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.ru.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.sk.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.sl.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.sq.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.sv.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.sw.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.th.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.tr.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.ua.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.uk.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.vi.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/locales/bootstrap-datepicker.zh-TW.js?body=1"></script>
+<script src="/assets/bootstrap-datepicker/index.js?body=1"></script>
+<script src="/assets/application.js?body=1"></script>
+    <script src="/assets/autocomplete-rails.js?body=1"></script>
+  </head>
+  <body>
+
+    <div class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a><a class="navbar-brand" href="/restaurant_recommendations">Whats For Lunch?</a></a>
+        <div class="navbar-collapse collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/restaurants">Restaurants</a></li>
+            <li><a href="/user_distances">Distance From You</a></li>
+            <li><a href="/attended_restaurants">Restaurants You&#39;ve Attended</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-14">
+          
+          <div class="page-header">
+  <h1>What&#39;s For Lunch?</h1>
+  <h3>Top Restaurant Recommendations</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Restaurant</th>
+      <th>Address</th>
+      <th>Distance</th>
+      <th>Last Attended</th>
+      <th>Recommendation Index</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><a href="/restaurant_recommendations/50">50</a></td>
+        <td>Mcnulty&#39;s tea &amp; coffee co</td>
+        <td>109 Christopher Street, New York, NY 10014, United States</td>
+        <td>1.81 mi</td>
+        <td></td>
+        <td>7.32</td>
+        <td>
+          <a class="btn btn-default btn-xs" href="/restaurant_recommendations/50"><span class="translation_missing" title="translation missing: en.helpers.links.show">Show</span></a>
+          <a class="btn btn-xs btn-danger" data-confirm="Are you sure?" data-method="delete" href="/restaurant_recommendations/50" rel="nofollow">Delete</a>
+        </td>
+      </tr>
+      <tr>
+        <td><a href="/restaurant_recommendations/45">45</a></td>
+        <td>Trinity place bar &amp; restaurant</td>
+        <td>115 Broadway, New York, NY 10006, United States</td>
+        <td>3.77 mi</td>
+        <td></td>
+        <td>7.03</td>
+        <td>
+          <a class="btn btn-default btn-xs" href="/restaurant_recommendations/45"><span class="translation_missing" title="translation missing: en.helpers.links.show">Show</span></a>
+          <a class="btn btn-xs btn-danger" data-confirm="Are you sure?" data-method="delete" href="/restaurant_recommendations/45" rel="nofollow">Delete</a>
+        </td>
+      </tr>
+      <tr>
+        <td><a href="/restaurant_recommendations/39">39</a></td>
+        <td>Studio 450</td>
+        <td>450 West 31st Street, New York, NY 10001, United States</td>
+        <td>0.54 mi</td>
+        <td></td>
+        <td>6.61</td>
+        <td>
+          <a class="btn btn-default btn-xs" href="/restaurant_recommendations/39"><span class="translation_missing" title="translation missing: en.helpers.links.show">Show</span></a>
+          <a class="btn btn-xs btn-danger" data-confirm="Are you sure?" data-method="delete" href="/restaurant_recommendations/39" rel="nofollow">Delete</a>
+        </td>
+      </tr>
+  </tbody>
+</table>
+
+<div class="page-header">
+  <h1>Broke From Christmas Shopping?</h1>
+  <h3>Budget Restaurant Recommendation</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Restaurant</th>
+      <th>Address</th>
+      <th>Distance</th>
+      <th>Last Attended</th>
+      <th>Budget Recommendation Index</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><a href="/restaurant_recommendations/50">50</a></td>
+        <td>Mcnulty&#39;s tea &amp; coffee co</td>
+        <td>109 Christopher Street, New York, NY 10014, United States</td>
+        <td>1.81 mi</td>
+        <td></td>
+        <td>7.36</td>
+        <td>
+          <a class="btn btn-default btn-xs" href="/restaurant_recommendations/50"><span class="translation_missing" title="translation missing: en.helpers.links.show">Show</span></a>
+          <a class="btn btn-xs btn-danger" data-confirm="Are you sure?" data-method="delete" href="/restaurant_recommendations/50" rel="nofollow">Delete</a>
+        </td>
+      </tr>
+  </tbody>
+</table>
+
+<div class="page-header">
+  <h1>Don&#39;t Feel Like Driving?</h1>
+  <h3>Top Distance Recommendation</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Restaurant</th>
+      <th>Address</th>
+      <th>Distance</th>
+      <th>Last Attended</th>
+      <th>Distance Recommendation Index</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><a href="/restaurant_recommendations/39">39</a></td>
+        <td>Studio 450</td>
+        <td>450 West 31st Street, New York, NY 10001, United States</td>
+        <td>0.54 mi</td>
+        <td></td>
+        <td>8.0</td>
+        <td>
+        <a class="btn btn-default btn-xs" href="/restaurant_recommendations/39"><span class="translation_missing" title="translation missing: en.helpers.links.show">Show</span></a>
+          <a class="btn btn-xs btn-danger" data-confirm="Are you sure?" data-method="delete" href="/restaurant_recommendations/39" rel="nofollow">Delete</a>
+        </td>
+      </tr>
+  </tbody>
+</table>
+
+
+<div class="page-header">
+  <h1>Looking for Something new?</h1>
+  <h3>Uniqueness Recommendation</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Restaurant</th>
+      <th>Address</th>
+      <th>Distance</th>
+      <th>Last Attended</th>
+      <th>Uniqueness Recommendation Index</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><a href="/restaurant_recommendations/45">45</a></td>
+        <td>Trinity place bar &amp; restaurant</td>
+        <td>115 Broadway, New York, NY 10006, United States</td>
+        <td>3.77 mi</td>
+        <td></td>
+        <td>8.14</td>
+        <td>
+          <a class="btn btn-default btn-xs" href="/restaurant_recommendations/45"><span class="translation_missing" title="translation missing: en.helpers.links.show">Show</span></a>
+          <a class="btn btn-xs btn-danger" data-confirm="Are you sure?" data-method="delete" href="/restaurant_recommendations/45" rel="nofollow">Delete</a>
+        </td>
+      </tr>
+  </tbody>
+</table>
+
+
+<a class="btn btn-primary" href="/restaurant_recommendations/new">New</a>
+
+        </div>
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <footer>
+            Logged in as <strong>deanmwebb2</strong>.
+            <a class="navbar-link" href="/users/edit">Edit profile</a> |
+            <a class="navbar-link" data-method="delete" href="/users/sign_out" rel="nofollow">Logout</a>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>
