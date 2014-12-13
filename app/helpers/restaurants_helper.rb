@@ -27,6 +27,8 @@ module RestaurantsHelper
             mode: "driving"
           }
 
+          Rails.logger.info "Parameters from calculate_distance_using_google_api method #{params}"
+
           uri.query = URI.encode_www_form(params)
 
          res = Net::HTTP.get_response(uri)
@@ -58,6 +60,10 @@ module RestaurantsHelper
               userIp: @ip_address,
               radius: 16093 #10 mile radius
             }
+
+          Rails.logger.info "Parameters from query_nearby_places method #{params}"
+
+
           uri.query = URI.encode_www_form(params)
 
           res = Net::HTTP.get_response(uri)
