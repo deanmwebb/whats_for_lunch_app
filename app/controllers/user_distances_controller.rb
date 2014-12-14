@@ -67,7 +67,7 @@ class UserDistancesController < ApplicationController
       format.html { redirect_to user_distances_url, notice: 'User distance was successfully destroyed.' }
       format.json { head :no_content }
     end
-  endx
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

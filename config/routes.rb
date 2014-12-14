@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :user_ratings
+
   resources :restaurant_recommendations
 
   resources :user_distances

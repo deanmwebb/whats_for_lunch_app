@@ -41,6 +41,7 @@ class RestaurantsController < ApplicationController
           UserDistance.create(user_id: current_user[:id], restaurant_id: @restaurant[:id], distance_from_user: user_distance_data[:distance_from_user], drive_time_for_user: user_distance_data[:drive_time_for_user])
 
           AttendedRestaurant.create(user_id: current_user[:id], restaurant_id: @restaurant[:id], date_attended: @restaurant.last_attended) unless @restaurant.last_attended.nil?
+          UserRating.create(user_id: current_user[:id], restaurant_id: @restaurant[:id], default?: false, rating: @restaurant.rating) unless @restaurant.rating.nil?
 
           format.html { redirect_to @restaurant, notice: 'Restaurant was successfully created.' }
           format.json { render :show, status: :created, location: @restaurant }
@@ -56,7 +57,9 @@ class RestaurantsController < ApplicationController
       @restaurant.save
 
       logger.info "INFO: Logging User Distance to Database... user_id: #{current_user[:id]}, restaurant_id: #{@restaurant[:id]}, distance_from_user: #{params[:distance_from_user]} Meters, drive_time_for_user: #{params[:drive_time_for_user]} Seconds"
-      UserDistance.create(user_id: current_user[:id], restaurant_id: @restaurant[:id], distance_from_user: params[:distance_from_user], drive_time_for_user: params[:drive_time_for_user])
+      UserDistance.create(user_id: current_user[:id], restaurant_id: @restaurant.id, distance_from_user: params[:distance_from_user], drive_time_for_user: params[:drive_time_for_user])
+      UserRating.create(user_id: current_user[:id], restaurant_id: @restaurant.id, default?: true, rating: @restaurant.rating) unless @restaurant.rating.nil?
+
     end
   end
 
@@ -67,6 +70,13 @@ class RestaurantsController < ApplicationController
       if @restaurant.update(restaurant_params)
 
         AttendedRestaurant.create(user_id: current_user[:id], restaurant_id: @restaurant.id, date_attended: @restaurant.last_attended) unless @restaurant.last_attended.nil?
+        UserRating.create(user_id: current_user[:id], restaurant_id: @restaurant[:id], default?: false, rating: @restaurant.rating) unless @restaurant.rating.nil?
+
+        updated_rating_array = UserRating.where(restaurant_id: @restaurant.id)
+
+        updated_rating_average = (updated_rating_array.map{|x| x.rating.to_f}.reduce(:+)/updated_rating_array.size).round(2) #Average all ratings
+        logger.info "INFO: updated_rating_average = #{updated_rating_average}"
+        @restaurant.update({rating: updated_rating_average})
 
         format.html { redirect_to @restaurant, notice: 'Restaurant was successfully updated.' }
         format.json { render :show, status: :ok, location: @restaurant }

@@ -1,0 +1,14 @@
+<%= simple_form_for(@user_rating) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :restaurant_id %>
+    <%= f.input :user_id %>
+    <%= f.input :default? %>
+    <%= f.input :rating %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

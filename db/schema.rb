@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141212005222) do
+ActiveRecord::Schema.define(version: 20141214145228) do
 
   create_table "attended_restaurants", force: true do |t|
     t.integer  "restaurant_id"
@@ -50,6 +50,15 @@ ActiveRecord::Schema.define(version: 20141212005222) do
     t.integer  "restaurant_id"
     t.integer  "distance_from_user"
     t.integer  "drive_time_for_user"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_ratings", force: true do |t|
+    t.integer  "restaurant_id"
+    t.integer  "user_id"
+    t.boolean  "default?"
+    t.integer  "rating"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

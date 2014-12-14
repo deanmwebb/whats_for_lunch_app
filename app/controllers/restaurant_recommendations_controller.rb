@@ -83,7 +83,7 @@ class RestaurantRecommendationsController < ApplicationController
 
     @loaded_restaurants.each { |restaurant|
 
-      if RestaurantRecommendationsHelper.get_distance_in_miles(@loaded_attended_restaurants, current_user, restaurant) < 15
+      if RestaurantRecommendationsHelper.get_distance_in_miles(@loaded_user_distances, current_user, restaurant) < 15
         overall_rating = calculate_overall_ranking(restaurant)
         budget_rating = calculate_budget_ranking(restaurant)
         distance_rating = calculate_distance_ranking(restaurant)

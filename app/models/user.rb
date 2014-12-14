@@ -6,4 +6,5 @@ class User < ActiveRecord::Base
 
 	belongs_to :attended_restaurant
 	belongs_to :user_distance
+	belongs_to :user_rating
 end
