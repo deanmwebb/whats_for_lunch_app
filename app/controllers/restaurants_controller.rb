@@ -92,10 +92,13 @@ class RestaurantsController < ApplicationController
     #Get Nearby Places
     @places = RestaurantsHelper.query_nearby_places(current_user.address)
 
+    preferred_places = RestaurantsHelper.retry_with_preferred_cuisine(current_user.address, current_user.preferred_cuisine)[:results]
+    preferred_places.each {|place| @places << place}
+
     @places.each do |place|
 
       creation_params = {
-        name: place["name"].capitalize,
+        name: place["name"],
         address: place["formatted_address"],
         rating: place["rating"].to_f,
         cuisine: place["types"].first.gsub("_"," ").split()[0].capitalize,
@@ -119,27 +122,6 @@ class RestaurantsController < ApplicationController
   end
 
   private
-
-  def retry_collecting_places(next_token)
-    uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
-    params = {
-      pagetoken: next_token,
-      key: "AIzaSyBZzPpygsuj-so-IUWVI87GTrWRQD2TDvU"
-    }
-    uri.query = URI.encode_www_form(params)
-    res = Net::HTTP.get_response(uri)
-
-    logger.info "Response from EXTENDED QUERY: #{JSON.parse(res.body)}"
-    temp = JSON.parse(res.body)["results"]
-    logger.info "Temp class: #{temp.class} Temp Size: #{temp.size}"
-
-    temp.each do |extended_result|
-      @places.push(extended_result)
-    end
-
-    next_token = JSON.parse(res.body)["next_page_token"]
-  end
-
   # Use callbacks to share common setup or constraints between actions.
   def set_restaurant
     @restaurant = Restaurant.find(params[:id])

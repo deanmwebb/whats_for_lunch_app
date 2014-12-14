@@ -23,7 +23,6 @@ module RestaurantsHelper
             origins: "#{origin_address_gps["formatted_address"]}",
             destinations: "#{destination_address_gps["formatted_address"]}",  
             key: key,
-            userIp: "54.197.242.176",
             mode: "driving"
           }
 
@@ -47,9 +46,9 @@ module RestaurantsHelper
 
   def self.query_nearby_places(current_user_address)
     if Rails.env.production?
-      key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY","AIzaSyAw-ItKGrTc6KTfnXwNa2s9KixqrKHVl1c"].sample
+      key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY"].sample
     else
-      key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY","AIzaSyAw-ItKGrTc6KTfnXwNa2s9KixqrKHVl1c"].sample
+      key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY"].sample
     end
 
     uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
@@ -57,8 +56,7 @@ module RestaurantsHelper
           key: key, 
           query: "Places near #{current_user_address}",
           types: "restaurant|food",
-          userIp: "54.197.242.176",
-          radius: 16093 #10 mile radius
+          radius: 160930 #10 mile radius
         }
 
       Rails.logger.info "Parameters from query_nearby_places method #{params}"
@@ -69,6 +67,77 @@ module RestaurantsHelper
       res = Net::HTTP.get_response(uri)
       Rails.logger.info "Response from Querying Places: #{res.body}"
 
-      JSON.parse(res.body)["results"]
+      places = JSON.parse(res.body)["results"]
+
+      #getting the second and third pages
+      page2_response = retry_collecting_places(current_user_address)
+      page2_response[:results].each {|place| places << place}
+
+
+      places.each { |place| Rails.logger.info "Place: #{place}";  4.times {Rails.logger.info ""} }
+
+      Rails.logger.info "Places Class_________________________________________ #{places.class}"
+      Rails.logger.info "Places Size_________________________________________ #{places.size}"
+      places
     end
+
+    def self.retry_collecting_places(current_user_address)
+
+    if Rails.env.production?
+      key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY"].sample
+    else
+      key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY"].sample
+    end
+
+    uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
+    params = {
+      key: key,
+      query: "Restaurants near #{current_user_address}",
+      radius: 160930 #10 mile radius
+    }
+
+    Rails.logger.info "Parameters from retry_collecting_places method #{params}"
+
+
+      uri.query = URI.encode_www_form(params)
+
+      res = Net::HTTP.get_response(uri)
+      Rails.logger.info "Response from retry_collecting_places request: #{res.body}"
+
+      {results: JSON.parse(res.body)["results"], next_page_token: JSON.parse(res.body)["next_page_token"]}
+  end
+
+  def self.retry_with_preferred_cuisine(current_user_address, current_user_preferred_cuisine)
+
+    if current_user_preferred_cuisine.nil?
+      preferred_cuisine = "Pizza"
+    else
+      preferred_cuisine = current_user_preferred_cuisine
+    end
+
+    if Rails.env.production?
+      key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY"].sample
+    else
+      key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY"].sample
+    end
+
+    uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
+    params = {
+      key: key,
+      query: "#{current_user_preferred_cuisine} near #{current_user_address}",
+      types: "restaurant|food",
+      radius: 160930 #10 mile radius
+    }
+
+    Rails.logger.info "Parameters from retry_collecting_places method #{params}"
+
+
+      uri.query = URI.encode_www_form(params)
+
+      res = Net::HTTP.get_response(uri)
+      Rails.logger.info "Response from retry_collecting_places request: #{res.body}"
+
+      {results: JSON.parse(res.body)["results"], next_page_token: JSON.parse(res.body)["next_page_token"]}
+  end
+
 end
