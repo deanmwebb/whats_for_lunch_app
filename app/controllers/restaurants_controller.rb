@@ -115,8 +115,6 @@ class RestaurantsController < ApplicationController
         creation_params[:distance_from_user] = distance[:distance_from_user].nil? ? 1000 : distance[:distance_from_user]
         creation_params[:drive_time_for_user] = distance[:drive_time_for_user].nil? ? 600 : distance[:drive_time_for_user]
 
-        logger.info "Distance/Duration between two points: #{distance}"
-
         create(creation_params)
       end
     end
@@ -141,7 +139,6 @@ class RestaurantsController < ApplicationController
           
 
             distance = RestaurantsHelper.calculate_distance_using_google_api({"formatted_address" => current_user.address}, {"formatted_address" => place.address})
-            logger.info "Distance/Duration between two points: #{distance}"
 
             creation_params[:distance_from_user] = distance[:distance_from_user]
             creation_params[:drive_time_for_user] = distance[:drive_time_for_user]

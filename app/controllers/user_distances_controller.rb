@@ -1,7 +1,6 @@
 class UserDistancesController < ApplicationController
   before_action :set_user_distance, only: [:show, :edit, :update, :destroy]
   before_action :load_existing_restaurants
-  helper_method :load_existing_restaurants
 
   # GET /user_distances
   # GET /user_distances.json
@@ -68,7 +67,7 @@ class UserDistancesController < ApplicationController
       format.html { redirect_to user_distances_url, notice: 'User distance was successfully destroyed.' }
       format.json { head :no_content }
     end
-  end
+  endx
 
   private
     # Use callbacks to share common setup or constraints between actions.

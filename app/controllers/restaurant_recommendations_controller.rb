@@ -1,9 +1,6 @@
 class RestaurantRecommendationsController < ApplicationController
 
   before_action :set_restaurant_recommendation, only: [:show, :edit, :update, :destroy]
-
-  helper_method :load_api_data_path
-  helper_method :load_distances_path
   before_filter :load_data, only: [:show, :index]
 
   # GET /restaurant_recommendations
