@@ -1,21 +1,11 @@
 require 'rails'
-require 'socket'
 
 module RestaurantsHelper
 
 	def self.calculate_distance_using_google_api(origin_address_gps, destination_address_gps)
        Rails.logger.info "Using Google Maps API to Calculate Distance between #{origin_address_gps["formatted_address"]} and #{destination_address_gps["formatted_address"]}"
        uri = URI('https://maps.googleapis.com/maps/api/distancematrix/json')
-
-        if Rails.env.production?
           key = "AIzaSyDNMJwNQiqU1-0KHZXz6omHpzCaqY5gKCs"
-          @ip_address = "54.197.242.176"
-        else
-          key = "AIzaSyDNMJwNQiqU1-0KHZXz6omHpzCaqY5gKCs"
-
-          ip=Socket.ip_address_list.detect{|intf| intf.ipv4_private?}
-          @ip_address = "54.197.242.176"
-        end
 
         Rails.logger.info "IP Address is #{@ip_address}"
 
@@ -45,13 +35,9 @@ module RestaurantsHelper
        end
 
   def self.query_nearby_places(current_user_address)
-    if Rails.env.production?
       key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY"].sample
-    else
-      key = ["AIzaSyA0zgbkEn__stJJwtR7f9JDxCYrQZC__QY"].sample
-    end
 
-    uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
+      uri = URI('https://maps.googleapis.com/maps/api/place/textsearch/json')
       params = { 
           key: key, 
           query: "Places near #{current_user_address}",
@@ -73,11 +59,6 @@ module RestaurantsHelper
       page2_response = retry_collecting_places(current_user_address)
       page2_response[:results].each {|place| places << place}
 
-
-      places.each { |place| Rails.logger.info "Place: #{place}";  4.times {Rails.logger.info ""} }
-
-      Rails.logger.info "Places Class_________________________________________ #{places.class}"
-      Rails.logger.info "Places Size_________________________________________ #{places.size}"
       places
     end
 

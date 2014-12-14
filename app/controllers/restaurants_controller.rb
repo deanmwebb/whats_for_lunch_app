@@ -98,7 +98,7 @@ class RestaurantsController < ApplicationController
     @places.each do |place|
 
       creation_params = {
-        name: place["name"],
+        name: place["name"].capitalize,
         address: place["formatted_address"],
         rating: place["rating"].to_f,
         cuisine: place["types"].first.gsub("_"," ").split()[0].capitalize,
