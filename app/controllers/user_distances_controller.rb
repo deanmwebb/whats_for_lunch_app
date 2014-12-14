@@ -1,6 +1,7 @@
 class UserDistancesController < ApplicationController
   before_action :set_user_distance, only: [:show, :edit, :update, :destroy]
   before_action :load_existing_restaurants
+  helper_method :load_existing_restaurants
 
   # GET /user_distances
   # GET /user_distances.json

@@ -4,7 +4,8 @@ require 'net/http'
 class RestaurantsController < ApplicationController
 
   before_action :set_restaurant, only: [:show, :edit, :update, :destroy]
-  before_action :load_restaurants_from_google_api, only: [:index]
+  before_action :load_restaurants_from_google_api
+  before_action :load_existing_restaurants_to_user_distance
 
   # GET /restaurants
   # GET /restaurants.json
@@ -126,6 +127,31 @@ class RestaurantsController < ApplicationController
   def set_restaurant
     @restaurant = Restaurant.find(params[:id])
   end
+
+  def load_existing_restaurants_to_user_distance  
+      Restaurant.all.each do |place|
+          creation_params = {
+              user_id: current_user.id,
+              restaurant_id: place[:id]
+            }
+
+        if UserDistance.where("user_id = ? AND  restaurant_id = ?", creation_params[:user_id], creation_params[:restaurant_id]).first.nil?
+
+          logger.info "Calcuating Distance for all restaurants in database for #{current_user.username}..."
+          
+
+            distance = RestaurantsHelper.calculate_distance_using_google_api({"formatted_address" => current_user.address}, {"formatted_address" => place.address})
+            logger.info "Distance/Duration between two points: #{distance}"
+
+            creation_params[:distance_from_user] = distance[:distance_from_user]
+            creation_params[:drive_time_for_user] = distance[:drive_time_for_user]
+            
+            user_distance = UserDistance.new(creation_params)
+            user_distance.save
+          end
+        end
+     end
+
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def restaurant_params
